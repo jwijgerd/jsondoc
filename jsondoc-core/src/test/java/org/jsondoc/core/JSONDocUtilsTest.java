@@ -27,10 +27,10 @@ public class JSONDocUtilsTest {
 		Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Api.class);
 		
 		JSONDoc apiDoc = new JSONDoc(version, basePath);
-		apiDoc.setApis(JSONDocUtils.getApiDocs(classes));
+		apiDoc.setApis(JSONDocUtils.createApiDocs(classes));
 		
 		classes = reflections.getTypesAnnotatedWith(ApiObject.class);
-		apiDoc.setObjects(JSONDocUtils.getApiObjectDocs(classes));
+		apiDoc.setObjects(JSONDocUtils.createApiObjectDocs(classes));
 		
 		try {
 			System.out.println(objectMapper.writeValueAsString(apiDoc));

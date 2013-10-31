@@ -1,19 +1,30 @@
 package org.jsondoc.core.util;
 
+import static org.jsondoc.core.util.JSONDocSupport.getBodyObject;
+import static org.jsondoc.core.util.JSONDocSupport.getFieldObject;
+import static org.jsondoc.core.util.JSONDocSupport.getParamObjects;
+import static org.jsondoc.core.util.JSONDocSupport.getReturnObject;
+import static org.jsondoc.core.util.JSONDocSupport.isMultiple;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.servlet.ServletContext;
-
 import org.jsondoc.core.annotation.Api;
+import org.jsondoc.core.annotation.ApiBodyObject;
+import org.jsondoc.core.annotation.ApiError;
 import org.jsondoc.core.annotation.ApiErrors;
+import org.jsondoc.core.annotation.ApiHeader;
 import org.jsondoc.core.annotation.ApiHeaders;
 import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiObject;
+import org.jsondoc.core.annotation.ApiObjectField;
+import org.jsondoc.core.annotation.ApiParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
 import org.jsondoc.core.pojo.ApiBodyObjectDoc;
 import org.jsondoc.core.pojo.ApiDoc;
@@ -21,6 +32,7 @@ import org.jsondoc.core.pojo.ApiErrorDoc;
 import org.jsondoc.core.pojo.ApiHeaderDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
+import org.jsondoc.core.pojo.ApiObjectFieldDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
 import org.jsondoc.core.pojo.JSONDoc;
@@ -28,94 +40,222 @@ import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-public class JSONDocUtils {
-	public static final String UNDEFINED = "undefined";
-	private static Reflections reflections = null;
-	
-	/**
-	 * Returns the main <code>ApiDoc</code>, containing <code>ApiMethodDoc</code> and <code>ApiObjectDoc</code> objects
-	 * @return An <code>ApiDoc</code> object
-	 */
-	public static JSONDoc getApiDoc(ServletContext servletContext, String version, String basePath) {
-		reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forWebInfClasses(servletContext)));
-		JSONDoc apiDoc = new JSONDoc(version, basePath);
-		apiDoc.setApis(getApiDocs(reflections.getTypesAnnotatedWith(Api.class)));
-		apiDoc.setObjects(getApiObjectDocs(reflections.getTypesAnnotatedWith(ApiObject.class)));
-		return apiDoc;
-	}
-	
-	public static Set<ApiDoc> getApiDocs(Set<Class<?>> classes) {
-		Set<ApiDoc> apiDocs = new TreeSet<ApiDoc>();
-		for (Class<?> controller : classes) {
-			ApiDoc apiDoc = ApiDoc.buildFromAnnotation(controller.getAnnotation(Api.class));
-			apiDoc.setMethods(getApiMethodDocs(controller));
-			apiDocs.add(apiDoc);
-		}
-		return apiDocs;
-	}
-	
-	public static Set<ApiObjectDoc> getApiObjectDocs(Set<Class<?>> classes) {
-		Set<ApiObjectDoc> pojoDocs = new TreeSet<ApiObjectDoc>();
-		for (Class<?> pojo : classes) {
-			ApiObject annotation = pojo.getAnnotation(ApiObject.class);
-			ApiObjectDoc pojoDoc = ApiObjectDoc.buildFromAnnotation(annotation, pojo);
-			if(annotation.show()) {
-				pojoDocs.add(pojoDoc);
-			}
-		}
-		return pojoDocs;
-	}
-	
-	private static List<ApiMethodDoc> getApiMethodDocs(Class<?> controller) {
-		List<ApiMethodDoc> apiMethodDocs = new ArrayList<ApiMethodDoc>();
-		Method[] methods = controller.getMethods();
-		for (Method method : methods) {
-			if(method.isAnnotationPresent(ApiMethod.class)) {
-				ApiMethodDoc apiMethodDoc = ApiMethodDoc.buildFromAnnotation(method.getAnnotation(ApiMethod.class));
-				
-				if(method.isAnnotationPresent(ApiHeaders.class)) {
-					apiMethodDoc.setHeaders(ApiHeaderDoc.buildFromAnnotation(method.getAnnotation(ApiHeaders.class)));
-				}
-				
-				apiMethodDoc.setUrlparameters(ApiParamDoc.getApiParamDocs(method));
-				
-				apiMethodDoc.setBodyobject(ApiBodyObjectDoc.buildFromAnnotation(method));
-				
-				if(method.isAnnotationPresent(ApiResponseObject.class)) {
-					apiMethodDoc.setResponse(ApiResponseObjectDoc.buildFromAnnotation(method.getAnnotation(ApiResponseObject.class), method));
-				}
-				
-				if(method.isAnnotationPresent(ApiErrors.class)) {
-					apiMethodDoc.setApierrors(ApiErrorDoc.buildFromAnnotation(method.getAnnotation(ApiErrors.class)));
-				}
-				
-				apiMethodDocs.add(apiMethodDoc);
-			}
-			
-		}
-		return apiMethodDocs;
-	}
-	
-	public static String getObjectNameFromAnnotatedClass(Class<?> clazz) {
-		Class<?> annotatedClass = Reflections.forName(clazz.getName());
-		if(annotatedClass.isAnnotationPresent(ApiObject.class)) {
-			return annotatedClass.getAnnotation(ApiObject.class).name();
-		}
-		return clazz.getSimpleName().toLowerCase();
-	}
-	
-	public static boolean isMultiple(Method method) {
-		if(Collection.class.isAssignableFrom(method.getReturnType()) || method.getReturnType().isArray()) {
-			return true;
-		}
-		return false;
-	}
-	
-	public static boolean isMultiple(Class<?> clazz) {
-		if(Collection.class.isAssignableFrom(clazz) || clazz.isArray()) {
-			return true;
-		}
-		return false;
-	}
-	
+public final class JSONDocUtils {
+
+    private JSONDocUtils() {
+        // private constructor for utility code.
+    }
+
+    public static JSONDoc createJsonDoc(String pkg, String version, String basePath) {
+        Reflections reflections = new Reflections(
+                new ConfigurationBuilder().setUrls(
+                        ClasspathHelper.forPackage(pkg)
+                )
+        );
+        JSONDoc apiDoc = new JSONDoc(version, basePath);
+        apiDoc.setApis(createApiDocs(reflections.getTypesAnnotatedWith(Api.class)));
+        apiDoc.setObjects(createApiObjectDocs(reflections.getTypesAnnotatedWith(ApiObject.class)));
+        return apiDoc;
+    }
+
+    public static Set<ApiDoc> createApiDocs(Iterable<Class<?>> classes) {
+        Set<ApiDoc> apiDocs = new TreeSet<ApiDoc>();
+        for (Class<?> controller : classes) {
+            ApiDoc apiDoc = createApiDoc(controller);
+            apiDoc.setMethods(createApiMethodDocs(controller));
+            apiDocs.add(apiDoc);
+        }
+        return apiDocs;
+    }
+
+    public static Set<ApiObjectDoc> createApiObjectDocs(Iterable<Class<?>> classes) {
+        Set<ApiObjectDoc> pojoDocs = new TreeSet<ApiObjectDoc>();
+        for (Class<?> pojo : classes) {
+            ApiObjectDoc pojoDoc = createApiObjectDoc(pojo);
+            if (pojoDoc != null) {
+                pojoDocs.add(pojoDoc);
+            }
+        }
+        return pojoDocs;
+    }
+
+    public static List<ApiMethodDoc> createApiMethodDocs(Class<?> controller) {
+        List<ApiMethodDoc> apiMethodDocs = new ArrayList<ApiMethodDoc>();
+        Method[] candidates = controller.getMethods();
+        for (Method candidate : candidates) {
+            if (candidate.isAnnotationPresent(ApiMethod.class)) {
+                ApiMethodDoc apiMethodDoc = createApiMethodDoc(candidate);
+                if (candidate.isAnnotationPresent(ApiHeaders.class)) {
+                    apiMethodDoc.setHeaders(createApiHeaderDocs(candidate));
+                }
+
+                apiMethodDoc.setUrlparameters(createApiParamDocs(candidate));
+                apiMethodDoc.setBodyobject(createApiBodyObjectDoc(candidate));
+
+                if (candidate.isAnnotationPresent(ApiResponseObject.class)) {
+                    apiMethodDoc.setResponse(
+                            createApiResponseObjectDoc(candidate)
+                    );
+                }
+
+                if (candidate.isAnnotationPresent(ApiErrors.class)) {
+                    apiMethodDoc.setApierrors(createApiErrorDocs(candidate));
+                }
+                apiMethodDocs.add(apiMethodDoc);
+            }
+        }
+        return apiMethodDocs;
+    }
+
+    public static ApiBodyObjectDoc createApiBodyObjectDoc(Method method) {
+        Integer index = getApiBodyObjectIndex(method);
+        if (index != -1) {
+            Class<?> parameter = method.getParameterTypes()[index];
+            boolean multiple = isMultiple(parameter);
+            String[] bodyObject = getBodyObject(method, index);
+            return new ApiBodyObjectDoc(
+                    bodyObject[0], bodyObject[1], bodyObject[2], String.valueOf(multiple), bodyObject[3]
+            );
+        }
+        return null;
+    }
+
+    public static ApiDoc createApiDoc(Class<?> clazz) {
+        Api api = clazz.getAnnotation(Api.class);
+        ApiDoc apiDoc = new ApiDoc();
+        apiDoc.setDescription(api.description());
+        apiDoc.setName(api.name());
+        return apiDoc;
+    }
+
+    public static List<ApiErrorDoc> createApiErrorDocs(Method method) {
+        ApiErrors annotation = method.getAnnotation(ApiErrors.class);
+        List<ApiErrorDoc> apiMethodDocs = new ArrayList<ApiErrorDoc>();
+        for (ApiError apiError : annotation.apierrors()) {
+            apiMethodDocs.add(new ApiErrorDoc(apiError.code(), apiError.description()));
+        }
+        return apiMethodDocs;
+    }
+
+    public static List<ApiHeaderDoc> createApiHeaderDocs(Method method) {
+        ApiHeaders annotation = method.getAnnotation(ApiHeaders.class);
+        List<ApiHeaderDoc> docs = new ArrayList<ApiHeaderDoc>();
+        for (ApiHeader apiHeader : annotation.headers()) {
+            docs.add(new ApiHeaderDoc(apiHeader.name(), apiHeader.description()));
+        }
+        return docs;
+    }
+
+    public static ApiMethodDoc createApiMethodDoc(Method method) {
+        ApiMethod annotation = method.getAnnotation(ApiMethod.class);
+        ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
+        apiMethodDoc.setPath(annotation.path());
+        apiMethodDoc.setDescription(annotation.description());
+        apiMethodDoc.setVerb(annotation.verb());
+        apiMethodDoc.setConsumes(Arrays.asList(annotation.consumes()));
+        apiMethodDoc.setProduces(Arrays.asList(annotation.produces()));
+        return apiMethodDoc;
+    }
+
+    public static ApiObjectDoc createApiObjectDoc(Class<?> clazz) {
+
+        ApiObject annotation = clazz.getAnnotation(ApiObject.class);
+        if (!annotation.show()) {
+            return null;
+        }
+
+        List<ApiObjectFieldDoc> fieldDocs = new ArrayList<ApiObjectFieldDoc>();
+        for (Field field : clazz.getDeclaredFields()) {
+            if (field.getAnnotation(ApiObjectField.class) != null) {
+                fieldDocs.add(createApiObjectFieldDoc(field));
+            }
+        }
+
+        Class<?> c = clazz.getSuperclass();
+        if (c != null) {
+            if (c.isAnnotationPresent(ApiObject.class)) {
+                ApiObjectDoc objDoc = createApiObjectDoc(c);
+                if (objDoc != null) {
+                    fieldDocs.addAll(objDoc.getFields());
+                }
+            }
+        }
+
+        return new ApiObjectDoc(annotation.name(), annotation.description(), fieldDocs);
+    }
+
+    public static ApiObjectFieldDoc createApiObjectFieldDoc(Field field) {
+        ApiObjectField annotation = field.getAnnotation(ApiObjectField.class);
+
+        ApiObjectFieldDoc apiPojoFieldDoc = new ApiObjectFieldDoc();
+        apiPojoFieldDoc.setName(field.getName());
+        apiPojoFieldDoc.setDescription(annotation.description());
+        String[] typeChecks = getFieldObject(field);
+        apiPojoFieldDoc.setType(typeChecks[0]);
+        apiPojoFieldDoc.setMultiple(String.valueOf(isMultiple(field.getType())));
+        apiPojoFieldDoc.setFormat(annotation.format());
+        apiPojoFieldDoc.setAllowedvalues(annotation.allowedvalues());
+        apiPojoFieldDoc.setMapKeyObject(typeChecks[1]);
+        apiPojoFieldDoc.setMapValueObject(typeChecks[2]);
+        apiPojoFieldDoc.setMap(typeChecks[3]);
+        return apiPojoFieldDoc;
+    }
+
+    public static List<ApiParamDoc> createApiParamDocs(Method method) {
+
+        List<ApiParamDoc> docs = new ArrayList<ApiParamDoc>();
+        Annotation[][] parametersAnnotations = method.getParameterAnnotations();
+
+        // for each parameter:
+        for (int i = 0; i < parametersAnnotations.length; i++) {
+            // for each annotation on the parameter:
+            for (int j = 0; j < parametersAnnotations[i].length; j++) {
+                // if the annotation is one that we are interested in:
+                if (parametersAnnotations[i][j] instanceof ApiParam) {
+                    ApiParam annotation = (ApiParam)parametersAnnotations[i][j];
+                    docs.add(
+                            createApiParamDoc(
+                                    annotation, getParamObjects(method, i)
+                            )
+                    );
+                }
+            }
+        }
+        return docs;
+    }
+
+    public static ApiParamDoc createApiParamDoc(ApiParam annotation, String type) {
+        return new ApiParamDoc(
+                annotation.name(),
+                annotation.description(),
+                type,
+                String.valueOf(annotation.required()),
+                annotation.allowedvalues(),
+                annotation.format()
+        );
+    }
+
+    public static ApiResponseObjectDoc createApiResponseObjectDoc(Method method) {
+
+        String[] objectDetails = getReturnObject(method);
+        return new ApiResponseObjectDoc(
+                objectDetails[0],
+                objectDetails[1],
+                objectDetails[2],
+                String.valueOf(isMultiple(method)),
+                objectDetails[3]
+        );
+    }
+
+    private static Integer getApiBodyObjectIndex(Method method) {
+        Annotation[][] parametersAnnotations = method.getParameterAnnotations();
+        for (int i = 0; i < parametersAnnotations.length; i++) {
+            for (int j = 0; j < parametersAnnotations[i].length; j++) {
+                if (parametersAnnotations[i][j] instanceof ApiBodyObject) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
 }

@@ -9,7 +9,6 @@ public class JSONDoc {
 	private Set<ApiObjectDoc> objects;
 
 	public JSONDoc(String version, String basePath) {
-		super();
 		this.version = version;
 		this.basePath = basePath;
 	}
