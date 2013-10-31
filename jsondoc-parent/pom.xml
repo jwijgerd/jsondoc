@@ -5,10 +5,10 @@
 
 	<groupId>org.jsondoc</groupId>
 	<artifactId>jsondoc-parent</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.1.1</version>
 	<packaging>pom</packaging>
 	<name>jsondoc-parent</name>
-	
+
 	<developers>
 		<developer>
 			<name>Fabio Maffioletti</name>
@@ -16,9 +16,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git@github.com:fabiomaffioletti/jsondoc.git</connection>
-		<url>scm:git:git@github.com:fabiomaffioletti/jsondoc.git</url>
-		<developerConnection>scm:git:git@github.com:fabiomaffioletti/jsondoc.git</developerConnection>
+		<connection>scm:git:git@github.com:ebuddy/jsondoc.git</connection>
+		<url>scm:git:git@github.com:ebuddy/jsondoc.git</url>
+		<developerConnection>scm:git:git@github.com:ebuddy/jsondoc.git</developerConnection>
 	</scm>
 	
 	<properties>
