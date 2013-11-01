@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.jsondoc</groupId>
 	<artifactId>jsondoc-parent</artifactId>
-	<version>1.0.1.2-SNAPSHOT</version>
+	<version>1.0.1.2</version>
 	<packaging>pom</packaging>
 	<name>jsondoc-parent</name>
 
@@ -19,7 +18,7 @@
 		<connection>scm:git:ssh://git@github.com/ebuddy/jsondoc.git</connection>
 		<url>scm:git:ssh://git@github.com/ebuddy/jsondoc.git</url>
 		<developerConnection>scm:git:ssh://git@github.com/ebuddy/jsondoc.git</developerConnection>
-	    <tag>master</tag>
+	    <tag>v1.0.1.2</tag>
     </scm>
 
 	<properties>
