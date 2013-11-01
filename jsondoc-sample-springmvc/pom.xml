@@ -2,16 +2,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<artifactId>jsondoc-parent</artifactId>
+		<artifactId>jsondoc</artifactId>
 		<groupId>org.jsondoc</groupId>
 		<version>1.0.1.2-SNAPSHOT</version>
-		<relativePath>../jsondoc-parent/pom.xml</relativePath>
 	</parent>
 	
 	<artifactId>jsondoc-sample-springmvc</artifactId>
 	<packaging>war</packaging>
 	
-	<name>jsondoc-sample-springmvc</name>
 	<description>The sample project of the jsondoc project</description>
 	<url>http://www.jsondoc.org</url>
 	
