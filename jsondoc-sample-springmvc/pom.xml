@@ -4,11 +4,10 @@
 	<parent>
 		<artifactId>jsondoc-parent</artifactId>
 		<groupId>org.jsondoc</groupId>
-		<version>1.0.1.2</version>
+		<version>1.0.1.2-SNAPSHOT</version>
 		<relativePath>../jsondoc-parent/pom.xml</relativePath>
 	</parent>
 	
-	<groupId>org.jsondoc</groupId>
 	<artifactId>jsondoc-sample-springmvc</artifactId>
 	<packaging>war</packaging>
 	

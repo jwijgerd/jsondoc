@@ -4,7 +4,7 @@
 
 	<groupId>org.jsondoc</groupId>
 	<artifactId>jsondoc-parent</artifactId>
-	<version>1.0.1.2</version>
+	<version>1.0.1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>jsondoc-parent</name>
 
@@ -18,7 +18,7 @@
 		<connection>scm:git:ssh://git@github.com/ebuddy/jsondoc.git</connection>
 		<url>scm:git:ssh://git@github.com/ebuddy/jsondoc.git</url>
 		<developerConnection>scm:git:ssh://git@github.com/ebuddy/jsondoc.git</developerConnection>
-	    <tag>v1.0.1.2</tag>
+	    <tag>master</tag>
     </scm>
 
 	<properties>
