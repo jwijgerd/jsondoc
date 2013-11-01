@@ -16,9 +16,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git@github.com:ebuddy/jsondoc.git</connection>
-		<url>scm:git:git@github.com:ebuddy/jsondoc.git</url>
-		<developerConnection>scm:git:git@github.com:ebuddy/jsondoc.git</developerConnection>
+		<connection>scm:git:ssh://git@github.com:ebuddy/jsondoc.git</connection>
+		<url>scm:git:ssh://git@github.com:ebuddy/jsondoc.git</url>
+		<developerConnection>scm:git:ssh://git@github.com:ebuddy/jsondoc.git</developerConnection>
 	</scm>
 	
 	<properties>
