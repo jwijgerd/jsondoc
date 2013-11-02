@@ -62,16 +62,16 @@ public class SpringMvcJSONDocUtils {
     }
 
     public static Set<ApiDoc> createApiDocs(Iterable<Class<?>> classes) {
-        Set<ApiDoc> apiDocs = new TreeSet<ApiDoc>();
+        List<ApiDoc> apiDocs = new ArrayList<ApiDoc>();
         for (Class<?> controller : classes) {
             apiDocs.add(createApiDoc(controller));
         }
-        return apiDocs;
+
+        Collections.sort(apiDocs, new ApiNameComparator());
+        return new TreeSet<ApiDoc>(apiDocs);
     }
 
     public static ApiDoc createApiDoc(Class<?> controller) {
-
-        // TODO: augment with content from the Api.class if it is available?
 
         ApiDoc apiDoc = new ApiDoc();
         apiDoc.setName(controller.getSimpleName());
@@ -83,7 +83,6 @@ public class SpringMvcJSONDocUtils {
             apiDoc.setName(annotation.name());
             apiDoc.setDescription(annotation.description());
         }
-
         return apiDoc;
     }
 
@@ -220,7 +219,7 @@ public class SpringMvcJSONDocUtils {
     }
 
     private static final class ApiMethodComparator implements Comparator<ApiMethodDoc> {
-        private Collator collator = Collator.getInstance();
+        private final Collator collator = Collator.getInstance();
 
         @Override
         public int compare(ApiMethodDoc methodA, ApiMethodDoc methodB) {
@@ -230,6 +229,15 @@ public class SpringMvcJSONDocUtils {
             }
 
             return methodA.getVerb().ordinal() - methodB.getVerb().ordinal();
+        }
+    }
+
+    private static final class ApiNameComparator implements Comparator<ApiDoc> {
+        private final Collator collator = Collator.getInstance();
+
+        @Override
+        public int compare(ApiDoc o1, ApiDoc o2) {
+            return collator.compare(o1.getName(), o2.getName());
         }
     }
 }
