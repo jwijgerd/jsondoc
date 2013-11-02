@@ -5,13 +5,17 @@ import static org.reflections.ReflectionUtils.getAllMethods;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.jsondoc.core.annotation.Api;
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.pojo.ApiBodyObjectDoc;
 import org.jsondoc.core.pojo.ApiDoc;
@@ -60,20 +64,25 @@ public class SpringMvcJSONDocUtils {
     public static Set<ApiDoc> createApiDocs(Iterable<Class<?>> classes) {
         Set<ApiDoc> apiDocs = new TreeSet<ApiDoc>();
         for (Class<?> controller : classes) {
-            ApiDoc apiDoc = createApiDoc(controller);
-            apiDoc.setMethods(createApiMethodDocs(controller));
-            apiDocs.add(apiDoc);
+            apiDocs.add(createApiDoc(controller));
         }
         return apiDocs;
     }
 
     public static ApiDoc createApiDoc(Class<?> controller) {
 
+        // TODO: augment with content from the Api.class if it is available?
+
         ApiDoc apiDoc = new ApiDoc();
         apiDoc.setName(controller.getSimpleName());
         apiDoc.setDescription(controller.getSimpleName());
+        apiDoc.setMethods(createApiMethodDocs(controller));
 
-        // augment with content from the Api.class if it is available?
+        if (controller.isAnnotationPresent(Api.class)) {
+            Api annotation = controller.getAnnotation(Api.class);
+            apiDoc.setName(annotation.name());
+            apiDoc.setDescription(annotation.description());
+        }
 
         return apiDoc;
     }
@@ -81,7 +90,6 @@ public class SpringMvcJSONDocUtils {
     public static List<ApiMethodDoc> createApiMethodDocs(Class<?> controller) {
 
         List<ApiMethodDoc> apiMethodDocs = new ArrayList<ApiMethodDoc>();
-
         Set<Method> endpoints = getAllMethods(controller, ReflectionUtils.withAnnotation(RequestMapping.class));
         for (Method endpoint : endpoints) {
 
@@ -89,7 +97,8 @@ public class SpringMvcJSONDocUtils {
             apiMethodDocs.add(apiMethodDoc);
         }
 
-
+        // sort methods alphabetically by path.
+        Collections.sort(apiMethodDocs, new ApiMethodComparator());
 
         return apiMethodDocs;
     }
@@ -180,29 +189,19 @@ public class SpringMvcJSONDocUtils {
 
     private static ApiParamDoc createApiParamDoc(RequestParam annotation, String type) {
         return new ApiParamDoc(
-                annotation.value(),
-                annotation.value(),
-                type,
-                String.valueOf(annotation.required()),
-                new String[]{},
-                ""
+                annotation.value(), annotation.value(), type, String.valueOf(annotation.required()), new String[]{}, ""
         );
     }
 
     private static ApiParamDoc createApiParamDoc(PathVariable annotation, String type) {
         return new ApiParamDoc(
-                annotation.value(),
-                annotation.value(),
-                type,
-                String.valueOf(true),
-                new String[]{},
-                ""
+                annotation.value(), annotation.value(), type, String.valueOf(true), new String[]{}, ""
         );
     }
 
     private static String readPath(RequestMapping baseMapping, RequestMapping methodMapping) {
         String path = "";
-        if (baseMapping.value().length > 0){
+        if (baseMapping.value().length > 0) {
             path = baseMapping.value()[0];
         }
         path += methodMapping.value()[0];
@@ -218,5 +217,19 @@ public class SpringMvcJSONDocUtils {
 
     public static Set<ApiObjectDoc> createApiObjectDocs(Iterable<Class<?>> classes) {
         return JSONDocUtils.createApiObjectDocs(classes);
+    }
+
+    private static final class ApiMethodComparator implements Comparator<ApiMethodDoc> {
+        private Collator collator = Collator.getInstance();
+
+        @Override
+        public int compare(ApiMethodDoc methodA, ApiMethodDoc methodB) {
+            int comparison = collator.compare(methodA.getPath(), methodB.getPath());
+            if (comparison != 0) {
+                return comparison;
+            }
+
+            return methodA.getVerb().ordinal() - methodB.getVerb().ordinal();
+        }
     }
 }

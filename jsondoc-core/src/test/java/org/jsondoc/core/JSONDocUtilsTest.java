@@ -1,10 +1,7 @@
 package org.jsondoc.core;
 
-import java.io.IOException;
 import java.util.Set;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jsondoc.core.annotation.Api;
 import org.jsondoc.core.annotation.ApiObject;
@@ -22,7 +19,7 @@ public class JSONDocUtilsTest {
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
-	public void testGetApi() {
+	public void testGetApi() throws Exception {
 		reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsondoc.core")));
 		Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Api.class);
 		
@@ -32,16 +29,7 @@ public class JSONDocUtilsTest {
 		classes = reflections.getTypesAnnotatedWith(ApiObject.class);
 		apiDoc.setObjects(JSONDocUtils.createApiObjectDocs(classes));
 		
-		try {
-			System.out.println(objectMapper.writeValueAsString(apiDoc));
-			
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	System.out.println(objectMapper.writeValueAsString(apiDoc));
 	}
 	
 }

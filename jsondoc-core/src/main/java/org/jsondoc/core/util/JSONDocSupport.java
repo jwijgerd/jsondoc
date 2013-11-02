@@ -71,8 +71,11 @@ public final class JSONDocSupport {
         if (Collection.class.isAssignableFrom(type)) {
             if (genericType instanceof ParameterizedType) {
                 ParameterizedType parameterizedType = (ParameterizedType)genericType;
-                Class<?> clazz = (Class<?>)parameterizedType.getActualTypeArguments()[0];
-                return new String[]{getObjectNameFromAnnotatedClass(clazz), null, null, null};
+                Type actualType = parameterizedType.getActualTypeArguments()[0];
+                if (actualType instanceof Class) {
+                    Class<?> clazz = (Class<?>)actualType;
+                    return new String[]{getObjectNameFromAnnotatedClass(clazz), null, null, null};
+                }
             }
             return new String[]{UNDEFINED, null, null, null};
         }
