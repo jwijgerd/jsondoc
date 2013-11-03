@@ -10,9 +10,10 @@ public final class ApiDoc implements Comparable<ApiDoc> {
     private String name;
     private String description;
     private List<ApiMethodDoc> methods;
+    private ApiVersionDoc version;
 
     public ApiDoc() {
-        this.methods = new ArrayList<ApiMethodDoc>();
+        methods = new ArrayList<ApiMethodDoc>();
     }
 
     public String getName() {
@@ -40,7 +41,11 @@ public final class ApiDoc implements Comparable<ApiDoc> {
     }
 
     public void addMethod(ApiMethodDoc apiMethod) {
-        this.methods.add(apiMethod);
+        methods.add(apiMethod);
+    }
+
+    public void removeMethod(ApiMethodDoc apiMethod) {
+        methods.remove(apiMethod);
     }
 
     @Override
@@ -50,5 +55,13 @@ public final class ApiDoc implements Comparable<ApiDoc> {
 
     public String getJsondocId() {
         return jsondocId;
+    }
+
+    public ApiVersionDoc getVersion() {
+        return version;
+    }
+
+    public void setVersion(ApiVersionDoc version) {
+        this.version = version;
     }
 }

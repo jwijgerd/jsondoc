@@ -5,8 +5,10 @@ import static org.jsondoc.core.util.JSONDocSupport.getFieldObject;
 import static org.jsondoc.core.util.JSONDocSupport.getParamObjects;
 import static org.jsondoc.core.util.JSONDocSupport.getReturnObject;
 import static org.jsondoc.core.util.JSONDocSupport.isMultiple;
+import static org.reflections.util.ClasspathHelper.forPackage;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectField;
 import org.jsondoc.core.annotation.ApiParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
+import org.jsondoc.core.annotation.ApiVersion;
 import org.jsondoc.core.pojo.ApiBodyObjectDoc;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiErrorDoc;
@@ -35,6 +38,7 @@ import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectFieldDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
+import org.jsondoc.core.pojo.ApiVersionDoc;
 import org.jsondoc.core.pojo.JSONDoc;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
@@ -48,9 +52,7 @@ public final class JSONDocUtils {
 
     public static JSONDoc createJsonDoc(String pkg, String version, String basePath) {
         Reflections reflections = new Reflections(
-                new ConfigurationBuilder().setUrls(
-                        ClasspathHelper.forPackage(pkg)
-                )
+                new ConfigurationBuilder().setUrls(forPackage(pkg))
         );
         JSONDoc apiDoc = new JSONDoc(version, basePath);
         apiDoc.setApis(createApiDocs(reflections.getTypesAnnotatedWith(Api.class)));
@@ -61,9 +63,7 @@ public final class JSONDocUtils {
     public static Set<ApiDoc> createApiDocs(Iterable<Class<?>> classes) {
         Set<ApiDoc> apiDocs = new TreeSet<ApiDoc>();
         for (Class<?> controller : classes) {
-            ApiDoc apiDoc = createApiDoc(controller);
-            apiDoc.setMethods(createApiMethodDocs(controller));
-            apiDocs.add(apiDoc);
+            apiDocs.add(createApiDoc(controller));
         }
         return apiDocs;
     }
@@ -85,10 +85,7 @@ public final class JSONDocUtils {
         for (Method candidate : candidates) {
             if (candidate.isAnnotationPresent(ApiMethod.class)) {
                 ApiMethodDoc apiMethodDoc = createApiMethodDoc(candidate);
-                if (candidate.isAnnotationPresent(ApiHeaders.class)) {
-                    apiMethodDoc.setHeaders(createApiHeaderDocs(candidate));
-                }
-
+                apiMethodDoc.setHeaders(createApiHeaderDocs(candidate));
                 apiMethodDoc.setUrlparameters(createApiParamDocs(candidate));
                 apiMethodDoc.setBodyobject(createApiBodyObjectDoc(candidate));
 
@@ -122,26 +119,36 @@ public final class JSONDocUtils {
 
     public static ApiDoc createApiDoc(Class<?> clazz) {
         Api api = clazz.getAnnotation(Api.class);
+        if (api == null) {
+            throw new IllegalArgumentException("Unable to create ApiDoc object from a class that is not " +
+                                                       "annotated with the @Api annotation.");
+        }
         ApiDoc apiDoc = new ApiDoc();
         apiDoc.setDescription(api.description());
         apiDoc.setName(api.name());
+        apiDoc.setVersion(createApiVersionDoc(clazz));
+        apiDoc.setMethods(createApiMethodDocs(clazz));
         return apiDoc;
     }
 
     public static List<ApiErrorDoc> createApiErrorDocs(Method method) {
-        ApiErrors annotation = method.getAnnotation(ApiErrors.class);
         List<ApiErrorDoc> apiMethodDocs = new ArrayList<ApiErrorDoc>();
-        for (ApiError apiError : annotation.apierrors()) {
-            apiMethodDocs.add(new ApiErrorDoc(apiError.code(), apiError.description()));
+        if (method.isAnnotationPresent(ApiErrors.class)) {
+            ApiErrors annotation = method.getAnnotation(ApiErrors.class);
+            for (ApiError apiError : annotation.apierrors()) {
+                apiMethodDocs.add(new ApiErrorDoc(apiError.code(), apiError.description()));
+            }
         }
         return apiMethodDocs;
     }
 
-    public static List<ApiHeaderDoc> createApiHeaderDocs(Method method) {
-        ApiHeaders annotation = method.getAnnotation(ApiHeaders.class);
+    public static List<ApiHeaderDoc> createApiHeaderDocs(AnnotatedElement element) {
         List<ApiHeaderDoc> docs = new ArrayList<ApiHeaderDoc>();
-        for (ApiHeader apiHeader : annotation.headers()) {
-            docs.add(new ApiHeaderDoc(apiHeader.name(), apiHeader.description()));
+        if (element.isAnnotationPresent(ApiHeaders.class)) {
+            ApiHeaders annotation = element.getAnnotation(ApiHeaders.class);
+            for (ApiHeader apiHeader : annotation.headers()) {
+                docs.add(new ApiHeaderDoc(apiHeader.name(), apiHeader.description()));
+            }
         }
         return docs;
     }
@@ -154,10 +161,15 @@ public final class JSONDocUtils {
         apiMethodDoc.setVerb(annotation.verb());
         apiMethodDoc.setConsumes(Arrays.asList(annotation.consumes()));
         apiMethodDoc.setProduces(Arrays.asList(annotation.produces()));
+        apiMethodDoc.setVersion(createApiVersionDoc(method));
         return apiMethodDoc;
     }
 
     public static ApiObjectDoc createApiObjectDoc(Class<?> clazz) {
+
+        if (!clazz.isAnnotationPresent(ApiObject.class)) {
+            return null;
+        }
 
         ApiObject annotation = clazz.getAnnotation(ApiObject.class);
         if (!annotation.show()) {
@@ -180,8 +192,7 @@ public final class JSONDocUtils {
                 }
             }
         }
-
-        return new ApiObjectDoc(annotation.name(), annotation.description(), fieldDocs);
+        return new ApiObjectDoc(annotation.name(), annotation.description(), fieldDocs, createApiVersionDoc(clazz));
     }
 
     public static ApiObjectFieldDoc createApiObjectFieldDoc(Field field) {
@@ -190,6 +201,7 @@ public final class JSONDocUtils {
         ApiObjectFieldDoc apiPojoFieldDoc = new ApiObjectFieldDoc();
         apiPojoFieldDoc.setName(field.getName());
         apiPojoFieldDoc.setDescription(annotation.description());
+        apiPojoFieldDoc.setVersion(createApiVersionDoc(field));
         String[] typeChecks = getFieldObject(field);
         apiPojoFieldDoc.setType(typeChecks[0]);
         apiPojoFieldDoc.setMultiple(String.valueOf(isMultiple(field.getType())));
@@ -208,17 +220,28 @@ public final class JSONDocUtils {
 
         // for each parameter:
         for (int i = 0; i < parametersAnnotations.length; i++) {
+
+            ApiParamDoc apiParamDoc = null;
+            ApiVersionDoc apiVersionDoc = null;
+
             // for each annotation on the parameter:
             for (int j = 0; j < parametersAnnotations[i].length; j++) {
+                Annotation parameterAnnotation = parametersAnnotations[i][j];
+
                 // if the annotation is one that we are interested in:
-                if (parametersAnnotations[i][j] instanceof ApiParam) {
-                    ApiParam annotation = (ApiParam)parametersAnnotations[i][j];
-                    docs.add(
-                            createApiParamDoc(
-                                    annotation, getParamObjects(method, i)
-                            )
-                    );
+                if (parameterAnnotation instanceof ApiParam) {
+                    ApiParam annotation = (ApiParam)parameterAnnotation;
+                    apiParamDoc = createApiParamDoc(annotation, getParamObjects(method, i));
                 }
+                if (parameterAnnotation instanceof ApiVersion) {
+                    ApiVersion annotation = (ApiVersion) parameterAnnotation;
+                    apiVersionDoc = new ApiVersionDoc(annotation.since(), annotation.until());
+                }
+            }
+
+            if (apiParamDoc != null) {
+                apiParamDoc.setVersion(apiVersionDoc);
+                docs.add(apiParamDoc);
             }
         }
         return docs;
@@ -245,6 +268,14 @@ public final class JSONDocUtils {
                 String.valueOf(isMultiple(method)),
                 objectDetails[3]
         );
+    }
+
+    public static ApiVersionDoc createApiVersionDoc(AnnotatedElement element) {
+        if (element.isAnnotationPresent(ApiVersion.class)) {
+            ApiVersion apiVersion = element.getAnnotation(ApiVersion.class);
+            return new ApiVersionDoc(apiVersion.since(), apiVersion.until());
+        }
+        return null;
     }
 
     private static Integer getApiBodyObjectIndex(Method method) {

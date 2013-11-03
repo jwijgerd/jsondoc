@@ -17,6 +17,7 @@ public final class ApiMethodDoc {
     private ApiBodyObjectDoc bodyobject;
     private ApiResponseObjectDoc response;
     private List<ApiErrorDoc> apierrors;
+    private ApiVersionDoc version;
 
     public ApiMethodDoc() {
         this.headers = new ArrayList<ApiHeaderDoc>();
@@ -106,5 +107,13 @@ public final class ApiMethodDoc {
 
     public String getJsondocId() {
         return jsondocId;
+    }
+
+    public void setVersion(ApiVersionDoc version) {
+        this.version = version;
+    }
+
+    public ApiVersionDoc getVersion() {
+        return version;
     }
 }

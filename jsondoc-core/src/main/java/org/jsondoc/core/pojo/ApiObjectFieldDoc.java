@@ -14,6 +14,7 @@ public final class ApiObjectFieldDoc {
     private String mapKeyObject;
     private String mapValueObject;
     private String map;
+    private ApiVersionDoc version;
 
     public String getMapKeyObject() {
         return mapKeyObject;
@@ -93,5 +94,13 @@ public final class ApiObjectFieldDoc {
 
     public String getJsondocId() {
         return jsondocId;
+    }
+
+    public void setVersion(ApiVersionDoc version) {
+        this.version = version;
+    }
+
+    public ApiVersionDoc getVersion() {
+        return version;
     }
 }

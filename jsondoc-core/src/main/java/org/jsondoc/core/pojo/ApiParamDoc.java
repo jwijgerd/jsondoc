@@ -11,6 +11,7 @@ public final class ApiParamDoc {
     private String required;
     private String[] allowedvalues;
     private String format;
+    private ApiVersionDoc version;
 
     public ApiParamDoc(String name,
                        String description,
@@ -52,5 +53,13 @@ public final class ApiParamDoc {
 
     public String getJsondocId() {
         return jsondocId;
+    }
+
+    public ApiVersionDoc getVersion() {
+        return version;
+    }
+
+    public void setVersion(ApiVersionDoc version) {
+        this.version = version;
     }
 }

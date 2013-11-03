@@ -111,10 +111,9 @@ public class SpringMvcJSONDocUtils {
         apiMethodDoc.setPath(readPath(baseMapping, methodMapping));
         apiMethodDoc.setDescription(method.getName()); // TODO: split the name on camel casing.
 
-        // TODO: do we need to handle multiple 'methods' defined for a single method?
         List<RequestMethod> methods = merge(baseMapping.method(), methodMapping.method());
         if (methods.size() != 1) {
-            // unexpected...
+            // TODO: do we need to handle multiple 'methods' defined for a single method?
         }
         apiMethodDoc.setVerb(ApiVerb.valueOf(methods.get(0).name()));
 
@@ -128,7 +127,6 @@ public class SpringMvcJSONDocUtils {
         }
         // TODO: adjust the header doc instances to if we have ApiHeader annotations present.
         apiMethodDoc.setHeaders(headerDocs);
-
         apiMethodDoc.setUrlparameters(createApiParamDocs(method));
         apiMethodDoc.setApierrors(createApiErrorDocs(method));
         apiMethodDoc.setResponse(createApiResponseObjectDoc(method));
