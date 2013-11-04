@@ -51,11 +51,11 @@ public class SpringMvcJSONDocUtilsTest {
         assertThat(methods.get(1).getVerb(), is(POST));
         assertThat(methods.get(2).getVerb(), is(PUT));
         assertThat(methods.get(3).getVerb(), is(DELETE));
-        assertThat(methods.get(3).getVerb(), is(GET));
+        assertThat(methods.get(4).getVerb(), is(GET));
     }
 
     @Test
-    public void testSampleResourceError() {
+    public void testSampleResourceAnnotatedError() {
         ApiDoc apiDoc = SpringMvcJSONDocUtils.createApiDoc(SampleController.class);
         ApiMethodDoc methodDoc = apiDoc.getMethods().get(2);
         assertThat(methodDoc.getPath(), is("/samples/"));
@@ -64,6 +64,18 @@ public class SpringMvcJSONDocUtilsTest {
         List<ApiErrorDoc> errors = methodDoc.getApierrors();
         assertThat(errors.size(), is(1));
         assertThat(errors.get(0).getCode(), is("400"));
+    }
+
+    @Test
+    public void testSampleResourceGenericError() {
+        ApiDoc apiDoc = SpringMvcJSONDocUtils.createApiDoc(SampleController.class);
+        ApiMethodDoc methodDoc = apiDoc.getMethods().get(3);
+        assertThat(methodDoc.getPath(), is("/samples/"));
+        assertThat(methodDoc.getVerb(), is(DELETE));
+
+        List<ApiErrorDoc> errors = methodDoc.getApierrors();
+        assertThat(errors.size(), is(1));
+        assertThat(errors.get(0).getCode(), is("???"));
     }
 
     @Test

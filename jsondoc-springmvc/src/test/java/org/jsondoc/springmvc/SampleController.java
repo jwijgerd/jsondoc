@@ -30,7 +30,7 @@ public class SampleController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE,value = "/")
-    public void deleteSample(String id) {
+    public void deleteSample(String id) throws Exception {
 
     }
 
