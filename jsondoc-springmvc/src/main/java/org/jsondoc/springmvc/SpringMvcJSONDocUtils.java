@@ -77,6 +77,7 @@ public class SpringMvcJSONDocUtils {
         apiDoc.setName(controller.getSimpleName());
         apiDoc.setDescription(controller.getSimpleName());
         apiDoc.setMethods(createApiMethodDocs(controller));
+        apiDoc.setVersion(JSONDocUtils.createApiVersionDoc(controller));
 
         if (controller.isAnnotationPresent(Api.class)) {
             Api annotation = controller.getAnnotation(Api.class);
@@ -110,6 +111,7 @@ public class SpringMvcJSONDocUtils {
         ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
         apiMethodDoc.setPath(readPath(baseMapping, methodMapping));
         apiMethodDoc.setDescription(method.getName()); // TODO: split the name on camel casing.
+        apiMethodDoc.setVersion(JSONDocUtils.createApiVersionDoc(method));
 
         List<RequestMethod> methods = merge(baseMapping.method(), methodMapping.method());
         if (methods.size() != 1) {
