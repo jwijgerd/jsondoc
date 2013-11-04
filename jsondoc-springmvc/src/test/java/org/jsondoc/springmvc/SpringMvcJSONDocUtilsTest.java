@@ -9,12 +9,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import org.jsondoc.core.pojo.ApiDoc;
+import org.jsondoc.core.pojo.ApiErrorDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectFieldDoc;
@@ -29,11 +29,15 @@ import com.google.common.collect.Iterables;
 public class SpringMvcJSONDocUtilsTest {
 
     @Test
-    public void testSampleResource() {
+    public void testSampleResourceAppi() {
         ApiDoc apiDoc = SpringMvcJSONDocUtils.createApiDoc(SampleController.class);
-
         assertThat(apiDoc.getName(), is("sample controller"));
         assertThat(apiDoc.getDescription(), is("sample controller"));
+    }
+
+    @Test
+    public void testSampleResourceMethods() {
+        ApiDoc apiDoc = SpringMvcJSONDocUtils.createApiDoc(SampleController.class);
 
         List<ApiMethodDoc> methods = apiDoc.getMethods();
         assertThat(methods.size(), is(5));
@@ -47,20 +51,37 @@ public class SpringMvcJSONDocUtilsTest {
         assertThat(methods.get(1).getVerb(), is(POST));
         assertThat(methods.get(2).getVerb(), is(PUT));
         assertThat(methods.get(3).getVerb(), is(DELETE));
+        assertThat(methods.get(3).getVerb(), is(GET));
     }
 
     @Test
-    public void testParametrizedField() {
-        Collection<Class<?>> objects = new ArrayList<Class<?>>();
-        objects.add(ParametrizedField.class);
-        Set<ApiObjectDoc> docs = SpringMvcJSONDocUtils.createApiObjectDocs(objects);
+    public void testSampleResourceError() {
+        ApiDoc apiDoc = SpringMvcJSONDocUtils.createApiDoc(SampleController.class);
+        ApiMethodDoc methodDoc = apiDoc.getMethods().get(2);
+        assertThat(methodDoc.getPath(), is("/samples/"));
+        assertThat(methodDoc.getVerb(), is(PUT));
+
+        List<ApiErrorDoc> errors = methodDoc.getApierrors();
+        assertThat(errors.size(), is(1));
+        assertThat(errors.get(0).getCode(), is("400"));
+    }
+
+    @Test
+    public void testSampleObject() {
+        Set<ApiObjectDoc> docs = SpringMvcJSONDocUtils.createApiObjectDocs(Arrays.<Class<?>>asList(Sample.class));
         assertThat(docs.size(), is(1));
 
         ApiObjectDoc object = Iterables.getFirst(docs, null);
-        assertThat(object.getName(), is("parametrized"));
+        assertThat(object.getName(), is("sample"));
         assertThat(object.getDescription(), is(""));
-        assertThat(object.getFields().size(), is(1));
+    }
 
+    @Test
+    public void testSampleParametrizedField() {
+        Set<ApiObjectDoc> docs = SpringMvcJSONDocUtils.createApiObjectDocs(Arrays.<Class<?>>asList(Sample.class));
+        assertThat(docs.size(), is(1));
+
+        ApiObjectDoc object = Iterables.getFirst(docs, null);
         ApiObjectFieldDoc field = Iterables.getFirst(object.getFields(), null);
         assertThat(field.getName(), is("parametrized"));
         assertThat(field.getDescription(), is("parametrized field"));

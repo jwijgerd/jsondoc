@@ -25,7 +25,7 @@ public class SampleController {
     }
 
     @RequestMapping(method = RequestMethod.PUT,value = "/")
-    public void updateSample(Sample sample) {
+    public void updateSample(Sample sample) throws SampleException {
 
     }
 
