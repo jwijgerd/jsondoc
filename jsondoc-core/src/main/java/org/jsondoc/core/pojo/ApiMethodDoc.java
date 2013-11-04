@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public final class ApiMethodDoc {
+import org.jsondoc.core.visitor.Visitable;
+import org.jsondoc.core.visitor.Visitor;
+
+public final class ApiMethodDoc implements Visitable {
 
     private String jsondocId = UUID.randomUUID().toString();
     private String path;
     private String description;
     private ApiVerb verb;
-    private List<String> produces;
-    private List<String> consumes;
-    private List<ApiHeaderDoc> headers;
-    private List<ApiParamDoc> urlparameters;
+    private List<String> produces = new ArrayList<String>();
+    private List<String> consumes = new ArrayList<String>();
+    private List<ApiHeaderDoc> headers = new ArrayList<ApiHeaderDoc>();
+    private List<ApiParamDoc> urlparameters = new ArrayList<ApiParamDoc>();
     private ApiBodyObjectDoc bodyobject;
     private ApiResponseObjectDoc response;
-    private List<ApiErrorDoc> apierrors;
+    private List<ApiErrorDoc> apierrors = new ArrayList<ApiErrorDoc>();
     private ApiVersionDoc version;
 
     public ApiMethodDoc() {
@@ -115,5 +118,10 @@ public final class ApiMethodDoc {
 
     public ApiVersionDoc getVersion() {
         return version;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

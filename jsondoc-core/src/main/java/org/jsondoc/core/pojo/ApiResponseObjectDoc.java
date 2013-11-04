@@ -2,7 +2,10 @@ package org.jsondoc.core.pojo;
 
 import java.util.UUID;
 
-public final class ApiResponseObjectDoc {
+import org.jsondoc.core.visitor.Visitable;
+import org.jsondoc.core.visitor.Visitor;
+
+public final class ApiResponseObjectDoc implements Visitable {
 
     private String jsondocId = UUID.randomUUID().toString();
     private String object;
@@ -45,5 +48,10 @@ public final class ApiResponseObjectDoc {
 
     public String getJsondocId() {
         return jsondocId;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

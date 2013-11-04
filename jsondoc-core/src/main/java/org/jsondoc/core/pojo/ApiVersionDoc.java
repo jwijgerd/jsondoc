@@ -1,9 +1,12 @@
 package org.jsondoc.core.pojo;
 
+import org.jsondoc.core.visitor.Visitable;
+import org.jsondoc.core.visitor.Visitor;
+
 /**
  * @author Daniel Ostermeier
  */
-public class ApiVersionDoc {
+public class ApiVersionDoc implements Visitable {
 
     private final int since;
     private final int until;
@@ -19,5 +22,10 @@ public class ApiVersionDoc {
 
     public int getUntil() {
         return until;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

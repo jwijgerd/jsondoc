@@ -2,7 +2,10 @@ package org.jsondoc.core.pojo;
 
 import java.util.UUID;
 
-public final class ApiObjectFieldDoc {
+import org.jsondoc.core.visitor.Visitable;
+import org.jsondoc.core.visitor.Visitor;
+
+public final class ApiObjectFieldDoc implements Visitable {
 
     private String jsondocId = UUID.randomUUID().toString();
     private String name;
@@ -10,7 +13,7 @@ public final class ApiObjectFieldDoc {
     private String multiple;
     private String description;
     private String format;
-    private String[] allowedvalues;
+    private String[] allowedvalues = new String[0];
     private String mapKeyObject;
     private String mapValueObject;
     private String map;
@@ -102,5 +105,10 @@ public final class ApiObjectFieldDoc {
 
     public ApiVersionDoc getVersion() {
         return version;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

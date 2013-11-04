@@ -1,12 +1,16 @@
 package org.jsondoc.core.pojo;
 
 import java.util.Set;
+import java.util.TreeSet;
 
-public class JSONDoc {
+import org.jsondoc.core.visitor.Visitable;
+import org.jsondoc.core.visitor.Visitor;
+
+public class JSONDoc implements Visitable {
 	private String version;
 	private String basePath;
-	private Set<ApiDoc> apis;
-	private Set<ApiObjectDoc> objects;
+	private Set<ApiDoc> apis = new TreeSet<ApiDoc>();
+	private Set<ApiObjectDoc> objects = new TreeSet<ApiObjectDoc>();
 
 	public JSONDoc(String version, String basePath) {
 		this.version = version;
@@ -45,4 +49,8 @@ public class JSONDoc {
 		this.basePath = basePath;
 	}
 
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
+    }
 }

@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public final class ApiDoc implements Comparable<ApiDoc> {
+import org.jsondoc.core.visitor.Visitable;
+import org.jsondoc.core.visitor.Visitor;
+
+public final class ApiDoc implements Comparable<ApiDoc>, Visitable {
 
     private String jsondocId = UUID.randomUUID().toString();
     private String name;
     private String description;
-    private List<ApiMethodDoc> methods;
+    private List<ApiMethodDoc> methods = new ArrayList<ApiMethodDoc>();
     private ApiVersionDoc version;
 
     public ApiDoc() {
@@ -63,5 +66,10 @@ public final class ApiDoc implements Comparable<ApiDoc> {
 
     public void setVersion(ApiVersionDoc version) {
         this.version = version;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 }
