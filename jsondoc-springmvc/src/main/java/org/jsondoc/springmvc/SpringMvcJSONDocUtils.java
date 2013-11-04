@@ -1,5 +1,7 @@
 package org.jsondoc.springmvc;
 
+import static com.google.common.base.CharMatcher.JAVA_UPPER_CASE;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.jsondoc.core.util.JSONDocSupport.getParamObjects;
 import static org.reflections.ReflectionUtils.getAllMethods;
 
@@ -37,6 +39,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 
 /**
  * @author Daniel Ostermeier
@@ -74,8 +82,8 @@ public class SpringMvcJSONDocUtils {
     public static ApiDoc createApiDoc(Class<?> controller) {
 
         ApiDoc apiDoc = new ApiDoc();
-        apiDoc.setName(controller.getSimpleName());
-        apiDoc.setDescription(controller.getSimpleName());
+        apiDoc.setName(splitCamelCase(controller.getSimpleName()));
+        apiDoc.setDescription(splitCamelCase(controller.getSimpleName()));
         apiDoc.setMethods(createApiMethodDocs(controller));
         apiDoc.setVersion(JSONDocUtils.createApiVersionDoc(controller));
 
@@ -110,7 +118,7 @@ public class SpringMvcJSONDocUtils {
 
         ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
         apiMethodDoc.setPath(readPath(baseMapping, methodMapping));
-        apiMethodDoc.setDescription(method.getName()); // TODO: split the name on camel casing.
+        apiMethodDoc.setDescription(splitCamelCase(method.getName()));
         apiMethodDoc.setVersion(JSONDocUtils.createApiVersionDoc(method));
 
         List<RequestMethod> methods = merge(baseMapping.method(), methodMapping.method());
@@ -149,9 +157,12 @@ public class SpringMvcJSONDocUtils {
         // A: extract as many details from the listed exceptions as possible.
         List<ApiErrorDoc> result = new ArrayList<ApiErrorDoc>();
         for (Class<?> exception : method.getExceptionTypes()) {
-            // 1: look for annotation on the exception that defines the http response status.
-            // 2: use its name as a description
-            result.add(new ApiErrorDoc("???", exception.getSimpleName())); // TODO: split name on camel case..
+            if (exception.isAnnotationPresent(ResponseStatus.class)) {
+                ResponseStatus status = exception.getAnnotation(ResponseStatus.class);
+                result.add(new ApiErrorDoc(String.valueOf(status.value().value()), status.reason()));
+            } else {
+                result.add(new ApiErrorDoc("???", splitCamelCase(exception.getSimpleName())));
+            }
         }
 
         // TODO: B: augment the details with those provided by the annotations.
@@ -238,6 +249,37 @@ public class SpringMvcJSONDocUtils {
         @Override
         public int compare(ApiDoc o1, ApiDoc o2) {
             return collator.compare(o1.getName(), o2.getName());
+        }
+    }
+
+    private static String splitCamelCase(String str) {
+
+        List<String> result = newArrayList();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (JAVA_UPPER_CASE.matches(c)) {
+                if (builder.length() > 0) {
+                    result.add(builder.toString());
+                }
+                builder = new StringBuilder();
+                builder.append(c);
+            } else {
+                builder.append(c);
+            }
+        }
+
+        if (builder.length() > 0) {
+            result.add(builder.toString());
+        }
+
+        return Joiner.on(" ").join(Iterables.transform(result, new LowerCaseFunction()));
+    }
+
+    private static class LowerCaseFunction implements Function<String,String> {
+        @Override
+        public String apply(String s) {
+            return s.toLowerCase();
         }
     }
 }

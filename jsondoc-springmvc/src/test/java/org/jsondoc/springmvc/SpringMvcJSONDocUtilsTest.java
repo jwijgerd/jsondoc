@@ -10,7 +10,6 @@ import static org.junit.Assert.fail;
 
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +18,6 @@ import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectFieldDoc;
-import org.jsondoc.core.pojo.ApiVerb;
 import org.junit.Test;
 
 import com.google.common.base.Function;
@@ -34,8 +32,8 @@ public class SpringMvcJSONDocUtilsTest {
     public void testSampleResource() {
         ApiDoc apiDoc = SpringMvcJSONDocUtils.createApiDoc(SampleController.class);
 
-        assertThat(apiDoc.getName(), is("SampleController"));
-        assertThat(apiDoc.getDescription(), is("SampleController"));
+        assertThat(apiDoc.getName(), is("sample controller"));
+        assertThat(apiDoc.getDescription(), is("sample controller"));
 
         List<ApiMethodDoc> methods = apiDoc.getMethods();
         assertThat(methods.size(), is(5));
