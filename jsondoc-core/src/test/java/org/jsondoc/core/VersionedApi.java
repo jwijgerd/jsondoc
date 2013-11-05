@@ -15,8 +15,8 @@ public class VersionedApi {
 
     @ApiVersion(since = 4, until = 10)
     @ApiMethod(path = "/path", description = "method description", verb = ApiVerb.GET)
-    public Object apiMethod(@ApiParam(name="a") @ApiVersion(since = 1) String paramA,
-                            @ApiParam(name="b") @ApiVersion(until = 10) String paramB,
+    public Object apiMethod(@ApiParam(name="a") String paramA,
+                            @ApiParam(name="b") String paramB,
                             @ApiParam(name="c") String paramC) {
         return null;
     }

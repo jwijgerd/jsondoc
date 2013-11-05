@@ -14,7 +14,6 @@ public final class ApiParamDoc implements Visitable {
     private String required;
     private String[] allowedvalues = new String[0];
     private String format;
-    private ApiVersionDoc version;
 
     public ApiParamDoc() {
 
@@ -84,14 +83,6 @@ public final class ApiParamDoc implements Visitable {
 
     public String getJsondocId() {
         return jsondocId;
-    }
-
-    public ApiVersionDoc getVersion() {
-        return version;
-    }
-
-    public void setVersion(ApiVersionDoc version) {
-        this.version = version;
     }
 
     @Override

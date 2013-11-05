@@ -233,14 +233,9 @@ public final class JSONDocUtils {
                     ApiParam annotation = (ApiParam)parameterAnnotation;
                     apiParamDoc = createApiParamDoc(annotation, getParamObjects(method, i));
                 }
-                if (parameterAnnotation instanceof ApiVersion) {
-                    ApiVersion annotation = (ApiVersion) parameterAnnotation;
-                    apiVersionDoc = new ApiVersionDoc(annotation.since(), annotation.until());
-                }
             }
 
             if (apiParamDoc != null) {
-                apiParamDoc.setVersion(apiVersionDoc);
                 docs.add(apiParamDoc);
             }
         }

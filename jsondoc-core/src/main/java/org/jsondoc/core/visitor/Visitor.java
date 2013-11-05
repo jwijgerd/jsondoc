@@ -8,6 +8,7 @@ import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectFieldDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
+import org.jsondoc.core.pojo.ApiPermissionDoc;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
 import org.jsondoc.core.pojo.ApiVersionDoc;
 import org.jsondoc.core.pojo.JSONDoc;
@@ -21,6 +22,7 @@ public interface Visitor<T> {
     T visit(ApiDoc api);
     T visit(ApiErrorDoc apiError);
     T visit(ApiHeaderDoc apiHeader);
+    T visit(ApiPermissionDoc apiHeader);
     T visit(ApiMethodDoc apiMethod);
     T visit(ApiObjectDoc apiObject);
     T visit(ApiObjectFieldDoc apiObjectField);

@@ -8,7 +8,6 @@ import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectFieldDoc;
-import org.jsondoc.core.pojo.ApiParamDoc;
 import org.jsondoc.core.pojo.ApiVersionDoc;
 import org.jsondoc.core.pojo.JSONDoc;
 
@@ -70,19 +69,6 @@ public class FilterByVersionVisitor extends AbstractDocVisitor<Void> {
                 field.accept(this);
             } else {
                 fields.remove(field);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Void visit(ApiMethodDoc method) {
-        List<ApiParamDoc> params = method.getUrlparameters();
-        for (ApiParamDoc param : new ArrayList<ApiParamDoc>(params)) {
-            if (acceptVersion(param.getVersion(), version)) {
-                param.accept(this);
-            } else {
-                params.remove(param);
             }
         }
         return null;

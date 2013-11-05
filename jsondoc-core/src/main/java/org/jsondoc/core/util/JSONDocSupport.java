@@ -87,7 +87,18 @@ public final class JSONDocSupport {
             return new String[]{
                     getObjectNameFromAnnotatedClass(type.getComponentType()), null, null, null
             };
+        }
+        if (genericType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType)genericType;
+            if (parameterizedType.getActualTypeArguments().length == 1) {
+                if (parameterizedType.getActualTypeArguments()[0] instanceof Class) {
+                    Class<?> typeArg = (Class<?>)parameterizedType.getActualTypeArguments()[0];
 
+                    if (typeArg.isAnnotationPresent(ApiObject.class)) {
+                        return new String[]{getObjectNameFromAnnotatedClass(typeArg), null, null, null};
+                    }
+                }
+            }
         }
         return new String[]{getObjectNameFromAnnotatedClass(type), null, null, null};
     }

@@ -60,20 +60,6 @@ public class JSONDocUtilsTest {
         ApiMethodDoc method = api.getMethods().get(0);
         assertThat(method.getVersion().getSince(), is(4));
         assertThat(method.getVersion().getUntil(), is(10));
-
-        List<ApiParamDoc> parameters = method.getUrlparameters();
-        ApiParamDoc paramA = parameters.get(0);
-        assertThat(paramA.getName(), is("a"));
-        assertThat(paramA.getVersion().getSince(), is(1));
-
-        ApiParamDoc paramB = parameters.get(1);
-        assertThat(paramB.getName(), is("b"));
-        assertThat(paramB.getVersion().getSince(), is(0));
-        assertThat(paramB.getVersion().getUntil(), is(10));
-
-        ApiParamDoc paramC = parameters.get(2);
-        assertThat(paramC.getName(), is("c"));
-        assertThat(paramC.getVersion(), is(nullValue()));
     }
 
 }

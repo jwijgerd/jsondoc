@@ -8,6 +8,7 @@ import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectFieldDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
+import org.jsondoc.core.pojo.ApiPermissionDoc;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
 import org.jsondoc.core.pojo.ApiVersionDoc;
 import org.jsondoc.core.pojo.JSONDoc;
@@ -34,6 +35,11 @@ public abstract class AbstractDocVisitor<T> implements Visitor<T> {
 
     @Override
     public T visit(ApiHeaderDoc apiHeader) {
+        return null;
+    }
+
+    @Override
+    public T visit(ApiPermissionDoc apiPermission) {
         return null;
     }
 

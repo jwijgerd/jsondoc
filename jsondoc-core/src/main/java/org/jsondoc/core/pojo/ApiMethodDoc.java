@@ -22,6 +22,8 @@ public final class ApiMethodDoc implements Visitable {
     private List<ApiErrorDoc> apierrors = new ArrayList<ApiErrorDoc>();
     private ApiVersionDoc version;
 
+    private List<ApiPermissionDoc> permissions = new ArrayList<ApiPermissionDoc>();
+
     public ApiMethodDoc() {
         this.headers = new ArrayList<ApiHeaderDoc>();
         this.urlparameters = new ArrayList<ApiParamDoc>();
@@ -34,6 +36,14 @@ public final class ApiMethodDoc implements Visitable {
 
     public void setHeaders(List<ApiHeaderDoc> headers) {
         this.headers = headers;
+    }
+
+    public List<ApiPermissionDoc> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<ApiPermissionDoc> permissions) {
+        this.permissions = permissions;
     }
 
     public List<String> getProduces() {
