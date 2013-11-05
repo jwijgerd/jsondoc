@@ -19,7 +19,8 @@ public final class ApiMethodDoc implements Visitable {
     private List<String> produces = new ArrayList<String>();
     private List<String> consumes = new ArrayList<String>();
     private List<ApiHeaderDoc> headers = new ArrayList<ApiHeaderDoc>();
-    private List<ApiParamDoc> urlparameters = new ArrayList<ApiParamDoc>();
+    private List<ApiParamDoc> pathparameters = new ArrayList<ApiParamDoc>();
+    private List<ApiParamDoc> queryparameters = new ArrayList<ApiParamDoc>();
     private List<ApiErrorDoc> apierrors = new ArrayList<ApiErrorDoc>();
     private List<ApiPermissionDoc> permissions = new ArrayList<ApiPermissionDoc>();
 
@@ -101,12 +102,20 @@ public final class ApiMethodDoc implements Visitable {
         this.description = description;
     }
 
-    public List<ApiParamDoc> getUrlparameters() {
-        return urlparameters;
+    public List<ApiParamDoc> getPathparameters() {
+        return pathparameters;
     }
 
-    public void setUrlparameters(List<ApiParamDoc> urlparameters) {
-        this.urlparameters = urlparameters;
+    public void setPathparameters(List<ApiParamDoc> pathparameters) {
+        this.pathparameters = pathparameters;
+    }
+
+    public List<ApiParamDoc> getQueryparameters() {
+        return queryparameters;
+    }
+
+    public void setQueryparameters(List<ApiParamDoc> queryparameters) {
+        this.queryparameters = queryparameters;
     }
 
     public ApiResponseObjectDoc getResponse() {

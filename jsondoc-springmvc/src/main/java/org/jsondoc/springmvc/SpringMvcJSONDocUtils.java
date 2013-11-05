@@ -24,6 +24,7 @@ import org.jsondoc.core.pojo.ApiHeaderDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
+import org.jsondoc.core.pojo.ApiParamType;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
 import org.jsondoc.core.pojo.ApiVerb;
 import org.jsondoc.core.pojo.JSONDoc;
@@ -130,7 +131,8 @@ public class SpringMvcJSONDocUtils {
         }
         // TODO: adjust the header doc instances to if we have ApiHeader annotations present.
         apiMethodDoc.setHeaders(headerDocs);
-        apiMethodDoc.setUrlparameters(createApiParamDocs(method));
+        apiMethodDoc.setPathparameters(createApiParamDocs(method, ApiParamType.PATH));
+        apiMethodDoc.setQueryparameters(createApiParamDocs(method, ApiParamType.QUERY));
         apiMethodDoc.setApierrors(createApiErrorDocs(method));
         apiMethodDoc.setResponse(createApiResponseObjectDoc(method));
         apiMethodDoc.setBodyobject(createApiBodyObjectDoc(method));
@@ -163,7 +165,7 @@ public class SpringMvcJSONDocUtils {
         return result;
     }
 
-    public static List<ApiParamDoc> createApiParamDocs(Method method) {
+    public static List<ApiParamDoc> createApiParamDocs(Method method, ApiParamType query) {
 
         List<ApiParamDoc> docs = new ArrayList<ApiParamDoc>();
         Annotation[][] parametersAnnotations = method.getParameterAnnotations();
@@ -176,12 +178,12 @@ public class SpringMvcJSONDocUtils {
 
                 // TODO: retrieve extra details from the ApiParam annotation is available?
 
-                if (parametersAnnotations[i][j] instanceof RequestParam) {
+                if (parametersAnnotations[i][j] instanceof RequestParam && query == ApiParamType.QUERY) {
                     RequestParam annotation = (RequestParam)parametersAnnotations[i][j];
                     docs.add(createApiParamDoc(annotation, getParamObjects(method, i)));
                 }
 
-                if (parametersAnnotations[i][j] instanceof PathVariable) {
+                if (parametersAnnotations[i][j] instanceof PathVariable && query == ApiParamType.PATH) {
                     PathVariable annotation = (PathVariable)parametersAnnotations[i][j];
                     docs.add(createApiParamDoc(annotation, getParamObjects(method, i)));
                 }

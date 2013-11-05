@@ -35,6 +35,14 @@ public class JsonDocApiParamHandler implements ApiMethodAnnotationHandler {
         paramDoc.setRequired(String.valueOf(annotation.required()));
 
         // TODO: ensure we do not have duplicates here.
-        doc.getUrlparameters().add(paramDoc);
+
+        switch (annotation.paramType()) {
+            case PATH:
+                doc.getPathparameters().add(paramDoc);
+                break;
+            case QUERY:
+                doc.getQueryparameters().add(paramDoc);
+                break;
+        }
     }
 }

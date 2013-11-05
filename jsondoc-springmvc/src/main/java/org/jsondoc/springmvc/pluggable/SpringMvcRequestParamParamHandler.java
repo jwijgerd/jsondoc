@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author Daniel Ostermeier
  */
-public class SpringMvcApiParamHandler implements ApiMethodAnnotationHandler {
+public class SpringMvcRequestParamParamHandler implements ApiMethodAnnotationHandler {
 
     @Override
     public boolean canHandle(AnnotatedElement candidate, Annotation annotation) {
@@ -35,7 +35,7 @@ public class SpringMvcApiParamHandler implements ApiMethodAnnotationHandler {
         apiParam.setRequired(String.valueOf(annotation.required()));
         apiParam.setAllowedvalues(new String[0]);
 
-        doc.getUrlparameters().add(apiParam);
+        doc.getQueryparameters().add(apiParam);
 
         // TODO: support PathVariable declarations?
         // TODO: read PathVariable declarations directly from the path?

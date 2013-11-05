@@ -255,7 +255,7 @@ ol.linenums li {
 						</tr>
 						<tr>
 							<td>Multiple</td>
-							<td>{{bodyobject.multiple}} ddd</td>
+							<td>{{bodyobject.multiple}}</td>
 						</tr>
 						{{#if bodyobject.map}}
 							<tr>

@@ -37,6 +37,7 @@ import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectFieldDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
+import org.jsondoc.core.pojo.ApiParamType;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
 import org.jsondoc.core.pojo.ApiVersionDoc;
 import org.jsondoc.core.pojo.JSONDoc;
@@ -86,7 +87,8 @@ public final class JSONDocUtils {
             if (candidate.isAnnotationPresent(ApiMethod.class)) {
                 ApiMethodDoc apiMethodDoc = createApiMethodDoc(candidate);
                 apiMethodDoc.setHeaders(createApiHeaderDocs(candidate));
-                apiMethodDoc.setUrlparameters(createApiParamDocs(candidate));
+                apiMethodDoc.setPathparameters(createApiParamDocs(candidate, ApiParamType.PATH));
+                apiMethodDoc.setQueryparameters(createApiParamDocs(candidate, ApiParamType.QUERY));
                 apiMethodDoc.setBodyobject(createApiBodyObjectDoc(candidate));
 
                 if (candidate.isAnnotationPresent(ApiResponseObject.class)) {
@@ -217,7 +219,7 @@ public final class JSONDocUtils {
         return apiPojoFieldDoc;
     }
 
-    public static List<ApiParamDoc> createApiParamDocs(Method method) {
+    public static List<ApiParamDoc> createApiParamDocs(Method method, ApiParamType paramType) {
 
         List<ApiParamDoc> docs = new ArrayList<ApiParamDoc>();
         Annotation[][] parametersAnnotations = method.getParameterAnnotations();
@@ -226,7 +228,6 @@ public final class JSONDocUtils {
         for (int i = 0; i < parametersAnnotations.length; i++) {
 
             ApiParamDoc apiParamDoc = null;
-            ApiVersionDoc apiVersionDoc = null;
 
             // for each annotation on the parameter:
             for (int j = 0; j < parametersAnnotations[i].length; j++) {
@@ -235,7 +236,9 @@ public final class JSONDocUtils {
                 // if the annotation is one that we are interested in:
                 if (parameterAnnotation instanceof ApiParam) {
                     ApiParam annotation = (ApiParam)parameterAnnotation;
-                    apiParamDoc = createApiParamDoc(annotation, getParamObjects(method, i));
+                    if (annotation.paramType() == paramType) {
+                        apiParamDoc = createApiParamDoc(annotation, getParamObjects(method, i));
+                    }
                 }
             }
 

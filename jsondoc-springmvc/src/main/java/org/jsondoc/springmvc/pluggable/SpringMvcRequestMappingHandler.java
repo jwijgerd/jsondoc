@@ -1,5 +1,6 @@
 package org.jsondoc.springmvc.pluggable;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.jsondoc.springmvc.ListUtils.merge;
 
 import java.lang.annotation.Annotation;
@@ -7,18 +8,21 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
+import org.jsondoc.core.pojo.ApiErrorDoc;
+import org.jsondoc.core.pojo.ApiHeaderDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiVerb;
-import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
 import org.jsondoc.core.util.JSONDocUtils;
 import org.jsondoc.springmvc.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * @author Daniel Ostermeier
  */
-public class SpringMvcApiMethodHandler implements ApiMethodAnnotationHandler {
+public class SpringMvcRequestMappingHandler implements ApiMethodAnnotationHandler {
 
     @Override
     public boolean canHandle(AnnotatedElement candidate, Annotation annotation) {
@@ -45,6 +49,24 @@ public class SpringMvcApiMethodHandler implements ApiMethodAnnotationHandler {
 
         doc.setConsumes(merge(baseMapping.consumes(), methodMapping.consumes()));
         doc.setProduces(merge(baseMapping.produces(), methodMapping.produces()));
+
+        List<String> headers = merge(baseMapping.headers(), methodMapping.headers());
+        List<ApiHeaderDoc> headerDocs = newArrayList();
+        for (String header : headers) {
+            headerDocs.add(new ApiHeaderDoc(header, header));
+        }
+
+        // Exceptions are not a type on there own, so drop this code here.
+        for (Class<?> exception : method.getExceptionTypes()) {
+            if (exception.isAnnotationPresent(ResponseStatus.class)) {
+                ResponseStatus status = exception.getAnnotation(ResponseStatus.class);
+                ApiErrorDoc errorDoc = new ApiErrorDoc(String.valueOf(status.value().value()), status.reason());
+                doc.getApierrors().add(errorDoc);
+            }
+        }
+
+        // TODO: if the header is already there, overwrite its contents...
+        doc.getHeaders().addAll(headerDocs);
     }
 
     private static String readPath(RequestMapping baseMapping, RequestMapping methodMapping) {

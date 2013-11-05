@@ -6,6 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.jsondoc.core.pojo.ApiParamType;
+
 /**
  * This annotation is to be used inside an annotation of type ApiParams
  * @see ApiParams
@@ -46,5 +48,10 @@ public @interface ApiParam {
 	 * @return
 	 */
 	String format() default "";
-	
+
+    /**
+     + Whether this is a path parameter or a query parameter
+     + @return
+     */
+    ApiParamType paramType() default ApiParamType.PATH;
 }

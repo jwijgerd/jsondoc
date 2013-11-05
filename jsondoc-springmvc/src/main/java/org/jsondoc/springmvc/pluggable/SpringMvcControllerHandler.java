@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 /**
  * @author Daniel Ostermeier
  */
-public class SpringMvcApiHandler implements ApiAnnotationHandler {
+public class SpringMvcControllerHandler implements ApiAnnotationHandler {
 
     @Override
     public boolean canHandle(AnnotatedElement candidate, Annotation annotation) {
