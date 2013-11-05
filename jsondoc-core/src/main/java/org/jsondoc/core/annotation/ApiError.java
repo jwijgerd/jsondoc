@@ -21,12 +21,12 @@ public @interface ApiError {
 	 * The error code returned
 	 * @return
 	 */
-	public String code();
+	String code();
 
 	/**
 	 * A description of what the error code means
 	 * @return
 	 */
-	public String description();
+	String description();
 	
 }

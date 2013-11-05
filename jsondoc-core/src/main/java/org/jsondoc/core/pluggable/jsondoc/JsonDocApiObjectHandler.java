@@ -1,9 +1,10 @@
-package org.jsondoc.core.pluggable;
+package org.jsondoc.core.pluggable.jsondoc;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
 import org.jsondoc.core.annotation.ApiObject;
+import org.jsondoc.core.pluggable.ApiObjectAnnotationHandler;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 
 /**
@@ -17,9 +18,9 @@ public class JsonDocApiObjectHandler implements ApiObjectAnnotationHandler {
     }
 
     @Override
-    public void handle(AnnotatedElement element, ApiObjectDoc apiObject) {
+    public void handle(AnnotatedElement element, ApiObjectDoc doc) {
         ApiObject annotation = element.getAnnotation(ApiObject.class);
-        apiObject.setName(annotation.name());
-        apiObject.setDescription(annotation.description());
+        doc.setName(annotation.name());
+        doc.setDescription(annotation.description());
     }
 }

@@ -22,18 +22,18 @@ public @interface ApiObject {
 	 * @see ApiResponseObject
 	 * @return
 	 */
-	public String name();
+	String name();
 	
 	/**
 	 * A description of what the object contains or represents
 	 * @return
 	 */
-	public String description() default "";
+	String description() default "";
 	
 	/**
 	 * Whether to build the json documentation for this object or not. Default value is true
 	 * @return
 	 */
-	public boolean show() default true;
+	boolean show() default true;
 	
 }

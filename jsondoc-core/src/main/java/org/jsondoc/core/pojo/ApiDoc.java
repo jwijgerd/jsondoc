@@ -9,14 +9,15 @@ import org.jsondoc.core.visitor.Visitor;
 
 public final class ApiDoc implements Comparable<ApiDoc>, Visitable {
 
-    private String jsondocId = UUID.randomUUID().toString();
+    private final String jsondocId = UUID.randomUUID().toString();
+
     private String name;
     private String description;
-    private List<ApiMethodDoc> methods = new ArrayList<ApiMethodDoc>();
     private ApiVersionDoc version;
+    private List<ApiMethodDoc> methods = new ArrayList<ApiMethodDoc>();
 
-    public ApiDoc() {
-        methods = new ArrayList<ApiMethodDoc>();
+    public String getJsondocId() {
+        return jsondocId;
     }
 
     public String getName() {
@@ -51,21 +52,17 @@ public final class ApiDoc implements Comparable<ApiDoc>, Visitable {
         methods.remove(apiMethod);
     }
 
-    @Override
-    public int compareTo(ApiDoc o) {
-        return name.compareTo(o.getName());
-    }
-
-    public String getJsondocId() {
-        return jsondocId;
-    }
-
     public ApiVersionDoc getVersion() {
         return version;
     }
 
     public void setVersion(ApiVersionDoc version) {
         this.version = version;
+    }
+
+    @Override
+    public int compareTo(ApiDoc o) {
+        return name.compareTo(o.getName());
     }
 
     @Override

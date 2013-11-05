@@ -21,30 +21,30 @@ public @interface ApiParam {
 	 * The name of the url parameter, as expected by the server
 	 * @return
 	 */
-	public String name();
+	String name();
 
 	/**
 	 * A description of what the parameter is needed for
 	 * @return
 	 */
-	public String description() default "";
+	String description() default "";
 	
 	/**
 	 * Whether this parameter is required or not. Default value is true
 	 * @return
 	 */
-	public boolean required() default true;
+	boolean required() default true;
 	
 	/**
 	 * An array representing the allowed values this parameter can have. Default value is *
 	 * @return
 	 */
-	public String[] allowedvalues() default {};
+	String[] allowedvalues() default {};
 	
 	/**
 	 * The format from the parameter (ex. yyyy-MM-dd HH:mm:ss, ...)
 	 * @return
 	 */
-	public String format() default "";
+	String format() default "";
 	
 }

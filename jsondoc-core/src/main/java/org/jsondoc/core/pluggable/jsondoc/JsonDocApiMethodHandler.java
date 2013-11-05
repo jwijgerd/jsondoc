@@ -1,4 +1,4 @@
-package org.jsondoc.core.pluggable;
+package org.jsondoc.core.pluggable.jsondoc;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.jsondoc.core.annotation.ApiMethod;
+import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 
 /**

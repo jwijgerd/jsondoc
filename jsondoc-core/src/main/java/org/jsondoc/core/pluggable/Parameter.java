@@ -6,38 +6,45 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
+ * Since the jdk does not provide a Parameter object, here it is.  It is backed
+ * by a {@link Method} instance and parameter index.
+ *
  * @author Daniel Ostermeier
  */
-
 public class Parameter implements AnnotatedElement {
 
     private final Method method;
-    private final Class<?> parameterType;
-    private final Annotation[] annotations;
-    private final Type genericParameterType;
     private final int index;
-//    private final String name;
 
     public Parameter(Method method, int index) {
         this.method = method;
         this.index = index;
-
-        parameterType = method.getParameterTypes()[index];
-        genericParameterType = method.getGenericParameterTypes()[index];
-        annotations = method.getParameterAnnotations()[index];
-//        name = method.getTypeParameters()[index].getName();
     }
 
+    /**
+     * @return the method this parameter is defined in.
+     */
     public Method getMethod() {
         return method;
     }
 
+    /**
+     * @return the parameters index within the methods full list of parameters.
+     */
+    public int getIndex() {
+        return index;
+    }
+
+    /**
+     * @return the formal parameter type of the parameter.
+     * @see Method#getParameterTypes()
+     */
     public Class<?> getParameterType() {
-        return parameterType;
+        return method.getParameterTypes()[index];
     }
 
     public Type getGenericParameterType() {
-        return genericParameterType;
+        return method.getGenericParameterTypes()[index];
     }
 
     @Override
@@ -47,7 +54,7 @@ public class Parameter implements AnnotatedElement {
 
     @Override
     public <T extends Annotation> T getAnnotation(Class<T> type) {
-        for (Annotation annotation : annotations) {
+        for (Annotation annotation : getDeclaredAnnotations()) {
             if (annotation.annotationType() == type) {
                 return (T)annotation;
             }
@@ -57,21 +64,11 @@ public class Parameter implements AnnotatedElement {
 
     @Override
     public Annotation[] getAnnotations() {
-        return annotations;
+        return method.getParameterAnnotations()[index];
     }
 
     @Override
     public Annotation[] getDeclaredAnnotations() {
-        return annotations;
-    }
-
-/*
-    public String getName() {
-        return name;
-    }
-*/
-
-    public int getIndex() {
-        return index;
+        return method.getParameterAnnotations()[index];
     }
 }

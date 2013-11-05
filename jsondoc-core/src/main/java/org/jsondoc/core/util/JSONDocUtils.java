@@ -110,9 +110,13 @@ public final class JSONDocUtils {
             Class<?> parameter = method.getParameterTypes()[index];
             boolean multiple = isMultiple(parameter);
             String[] bodyObject = getBodyObject(method, index);
-            return new ApiBodyObjectDoc(
-                    bodyObject[0], bodyObject[1], bodyObject[2], String.valueOf(multiple), bodyObject[3]
-            );
+            ApiBodyObjectDoc body = new ApiBodyObjectDoc();
+            body.setObject(bodyObject[0]);
+            body.setMapKeyObject(bodyObject[1]);
+            body.setMapValueObject(bodyObject[2]);
+            body.setMultiple(String.valueOf(multiple));
+            body.setMap(bodyObject[3]);
+            return body;
         }
         return null;
     }
@@ -243,26 +247,27 @@ public final class JSONDocUtils {
     }
 
     public static ApiParamDoc createApiParamDoc(ApiParam annotation, String type) {
-        return new ApiParamDoc(
-                annotation.name(),
-                annotation.description(),
-                type,
-                String.valueOf(annotation.required()),
-                annotation.allowedvalues(),
-                annotation.format()
-        );
+        ApiParamDoc paramDoc = new ApiParamDoc();
+        paramDoc.setName(annotation.name());
+        paramDoc.setDescription(annotation.description());
+        paramDoc.setType(type);
+        paramDoc.setRequired(String.valueOf(annotation.required()));
+        paramDoc.setAllowedvalues(annotation.allowedvalues());
+        paramDoc.setFormat(annotation.format());
+        return paramDoc;
     }
 
     public static ApiResponseObjectDoc createApiResponseObjectDoc(Method method) {
 
         String[] objectDetails = getReturnObject(method);
-        return new ApiResponseObjectDoc(
-                objectDetails[0],
-                objectDetails[1],
-                objectDetails[2],
-                String.valueOf(isMultiple(method)),
-                objectDetails[3]
-        );
+
+        ApiResponseObjectDoc responseDoc = new ApiResponseObjectDoc();
+        responseDoc.setObject(objectDetails[0]);
+        responseDoc.setMapKeyObject(objectDetails[1]);
+        responseDoc.setMapValueObject(objectDetails[2]);
+        responseDoc.setMultiple(String.valueOf(isMultiple(method)));
+        responseDoc.setMap(objectDetails[3]);
+        return responseDoc;
     }
 
     public static ApiVersionDoc createApiVersionDoc(AnnotatedElement element) {

@@ -22,6 +22,6 @@ public @interface ApiErrors {
 	 * @see ApiError
 	 * @return
 	 */
-	public ApiError[] apierrors();
+	ApiError[] apierrors();
 	
 }

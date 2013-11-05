@@ -9,25 +9,22 @@ import org.jsondoc.core.visitor.Visitor;
 
 public final class ApiMethodDoc implements Visitable {
 
-    private String jsondocId = UUID.randomUUID().toString();
+    private final String jsondocId = UUID.randomUUID().toString();
     private String path;
     private String description;
+    private ApiVersionDoc version;
     private ApiVerb verb;
+    private ApiBodyObjectDoc bodyobject;
+    private ApiResponseObjectDoc response;
     private List<String> produces = new ArrayList<String>();
     private List<String> consumes = new ArrayList<String>();
     private List<ApiHeaderDoc> headers = new ArrayList<ApiHeaderDoc>();
     private List<ApiParamDoc> urlparameters = new ArrayList<ApiParamDoc>();
-    private ApiBodyObjectDoc bodyobject;
-    private ApiResponseObjectDoc response;
     private List<ApiErrorDoc> apierrors = new ArrayList<ApiErrorDoc>();
-    private ApiVersionDoc version;
-
     private List<ApiPermissionDoc> permissions = new ArrayList<ApiPermissionDoc>();
 
-    public ApiMethodDoc() {
-        this.headers = new ArrayList<ApiHeaderDoc>();
-        this.urlparameters = new ArrayList<ApiParamDoc>();
-        this.apierrors = new ArrayList<ApiErrorDoc>();
+    public String getJsondocId() {
+        return jsondocId;
     }
 
     public List<ApiHeaderDoc> getHeaders() {
@@ -38,12 +35,30 @@ public final class ApiMethodDoc implements Visitable {
         this.headers = headers;
     }
 
+    public ApiHeaderDoc getHeader(String name) {
+        for (ApiHeaderDoc header : headers) {
+            if (header.getName().compareTo(name) == 0) {
+                return header;
+            }
+        }
+        return null;
+    }
+
     public List<ApiPermissionDoc> getPermissions() {
         return permissions;
     }
 
     public void setPermissions(List<ApiPermissionDoc> permissions) {
         this.permissions = permissions;
+    }
+
+    public ApiPermissionDoc getPermission(String name) {
+        for (ApiPermissionDoc permission : permissions) {
+            if (permission.getName().compareTo(name) == 0) {
+                return permission;
+            }
+        }
+        return null;
     }
 
     public List<String> getProduces() {
@@ -118,8 +133,13 @@ public final class ApiMethodDoc implements Visitable {
         this.apierrors = apierrors;
     }
 
-    public String getJsondocId() {
-        return jsondocId;
+    public ApiErrorDoc getError(String code) {
+        for (ApiErrorDoc error : apierrors) {
+            if (error.getCode().compareTo(code) == 0) {
+                return error;
+            }
+        }
+        return null;
     }
 
     public void setVersion(ApiVersionDoc version) {

@@ -7,17 +7,22 @@ import org.jsondoc.core.visitor.Visitor;
 
 public final class ApiObjectFieldDoc implements Visitable {
 
-    private String jsondocId = UUID.randomUUID().toString();
+    private final String jsondocId = UUID.randomUUID().toString();
+
     private String name;
+    private String description;
+    private ApiVersionDoc version;
+    private String[] allowedvalues = new String[0];
     private String type;
     private String multiple;
-    private String description;
     private String format;
-    private String[] allowedvalues = new String[0];
     private String mapKeyObject;
     private String mapValueObject;
     private String map;
-    private ApiVersionDoc version;
+
+    public String getJsondocId() {
+        return jsondocId;
+    }
 
     public String getMapKeyObject() {
         return mapKeyObject;
@@ -89,14 +94,6 @@ public final class ApiObjectFieldDoc implements Visitable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public ApiObjectFieldDoc() {
-        super();
-    }
-
-    public String getJsondocId() {
-        return jsondocId;
     }
 
     public void setVersion(ApiVersionDoc version) {

@@ -20,18 +20,18 @@ public @interface ApiObjectField {
 	 * A drescription of what the field is
 	 * @return
 	 */
-	public String description();
+	String description();
 	
 	/**
 	 * The format pattern for this field
 	 * @return
 	 */
-	public String format() default "";
+	String format() default "";
 	
 	/**
 	 * The allowed values for this field
 	 * @return
 	 */
-	public String[] allowedvalues() default {};
+	String[] allowedvalues() default {};
 
 }

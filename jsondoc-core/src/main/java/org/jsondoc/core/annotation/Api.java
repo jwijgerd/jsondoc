@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation is to be used on your "service" class, for example controller classes in Spring MVC.
- * @author Fabio Maffioletti
  *
+ * @author Fabio Maffioletti
  */
 @Documented
 @Target(value=ElementType.TYPE)
@@ -17,15 +17,15 @@ import java.lang.annotation.Target;
 public @interface Api {
 
 	/**
-	 * A description of what the API does
+	 * A description of what the API does.
 	 * @return
 	 */
-	public String description();
+	String description();
 	
 	/**
-	 * The name of the API
+	 * The name of the API.
 	 * @return
 	 */
-	public String name();
+	String name();
 
 }

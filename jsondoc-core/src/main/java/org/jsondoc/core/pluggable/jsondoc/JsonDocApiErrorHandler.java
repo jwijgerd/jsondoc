@@ -1,10 +1,11 @@
-package org.jsondoc.core.pluggable;
+package org.jsondoc.core.pluggable.jsondoc;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
 import org.jsondoc.core.annotation.ApiError;
 import org.jsondoc.core.annotation.ApiErrors;
+import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
 import org.jsondoc.core.pojo.ApiErrorDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 

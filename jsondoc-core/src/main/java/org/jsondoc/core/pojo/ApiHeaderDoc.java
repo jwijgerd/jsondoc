@@ -7,7 +7,8 @@ import org.jsondoc.core.visitor.Visitor;
 
 public final class ApiHeaderDoc implements Visitable {
 
-    private String jsondocId = UUID.randomUUID().toString();
+    private final String jsondocId = UUID.randomUUID().toString();
+
     private String name;
     private String description;
 
@@ -16,16 +17,24 @@ public final class ApiHeaderDoc implements Visitable {
         this.description = description;
     }
 
+    public String getJsondocId() {
+        return jsondocId;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public String getJsondocId() {
-        return jsondocId;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

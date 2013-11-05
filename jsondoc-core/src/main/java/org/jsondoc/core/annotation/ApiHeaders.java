@@ -22,6 +22,6 @@ public @interface ApiHeaders {
 	 * @see ApiHeader
 	 * @return
 	 */
-	public ApiHeader[] headers();
+	ApiHeader[] headers();
 	
 }

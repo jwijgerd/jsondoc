@@ -1,9 +1,11 @@
-package org.jsondoc.core.pluggable;
+package org.jsondoc.core.pluggable.jsondoc;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
 import org.jsondoc.core.annotation.ApiParam;
+import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
+import org.jsondoc.core.pluggable.Parameter;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
 import org.jsondoc.core.util.JSONDocSupport;

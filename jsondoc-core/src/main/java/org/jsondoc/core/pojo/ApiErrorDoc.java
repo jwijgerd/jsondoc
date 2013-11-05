@@ -7,25 +7,37 @@ import org.jsondoc.core.visitor.Visitor;
 
 public final class ApiErrorDoc implements Visitable {
 
-    private String jsondocId = UUID.randomUUID().toString();
+    private final String jsondocId = UUID.randomUUID().toString();
     private String code;
     private String description;
+
+    public ApiErrorDoc(){
+
+    }
 
     public ApiErrorDoc(String code, String description) {
         this.code = code;
         this.description = description;
     }
 
+    public String getJsondocId() {
+        return jsondocId;
+    }
+
     public String getCode() {
         return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public String getJsondocId() {
-        return jsondocId;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

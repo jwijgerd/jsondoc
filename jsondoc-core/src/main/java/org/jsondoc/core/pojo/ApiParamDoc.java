@@ -7,31 +7,15 @@ import org.jsondoc.core.visitor.Visitor;
 
 public final class ApiParamDoc implements Visitable {
 
-    private String jsondocId = UUID.randomUUID().toString();
+    private final String jsondocId = UUID.randomUUID().toString();
+
     private String name;
     private String description;
+
     private String type;
     private String required;
     private String[] allowedvalues = new String[0];
     private String format;
-
-    public ApiParamDoc() {
-
-    }
-
-    public ApiParamDoc(String name,
-                       String description,
-                       String type,
-                       String required,
-                       String[] allowedvalues,
-                       String format) {
-        this.name = name;
-        this.description = description;
-        this.type = type;
-        this.required = required;
-        this.allowedvalues = allowedvalues;
-        this.format = format;
-    }
 
     public String getType() {
         return type;

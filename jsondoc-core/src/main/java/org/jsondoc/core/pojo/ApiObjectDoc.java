@@ -9,10 +9,11 @@ import org.jsondoc.core.visitor.Visitor;
 
 public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
 
-    private ApiVersionDoc version;
-    private String jsondocId = UUID.randomUUID().toString();
+    private final String jsondocId = UUID.randomUUID().toString();
+
     private String name;
     private String description;
+    private ApiVersionDoc version;
     private List<ApiObjectFieldDoc> fields = new ArrayList<ApiObjectFieldDoc>();
 
     public ApiObjectDoc() {
@@ -24,6 +25,10 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
         this.description = description;
         this.fields = fields;
         this.version = version;
+    }
+
+    public String getJsondocId() {
+        return jsondocId;
     }
 
     public String getName() {
@@ -42,6 +47,14 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
         this.description = description;
     }
 
+    public ApiVersionDoc getVersion() {
+        return version;
+    }
+
+    public void setVersion(ApiVersionDoc version) {
+        this.version = version;
+    }
+
     public List<ApiObjectFieldDoc> getFields() {
         return fields;
     }
@@ -50,21 +63,18 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
         this.fields = fields;
     }
 
+    public ApiObjectFieldDoc getField(String name) {
+        for (ApiObjectFieldDoc field : fields) {
+            if (field.getName().compareTo(name) == 0) {
+                return field;
+            }
+        }
+        return null;
+    }
+
     @Override
     public int compareTo(ApiObjectDoc o) {
         return name.compareTo(o.getName());
-    }
-
-    public String getJsondocId() {
-        return jsondocId;
-    }
-
-    public ApiVersionDoc getVersion() {
-        return version;
-    }
-
-    public void setVersion(ApiVersionDoc version) {
-        this.version = version;
     }
 
     @Override

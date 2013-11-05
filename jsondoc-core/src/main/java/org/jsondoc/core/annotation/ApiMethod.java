@@ -22,31 +22,31 @@ public @interface ApiMethod {
 	 * The relative path for this method (ex. /country/get/{name})
 	 * @return
 	 */
-	public String path();
+	String path();
 
 	/**
 	 * A description of what the method does
 	 * @return
 	 */
-	public String description();
+	String description();
 	
 	/**
 	 * The request verb (or method), to be filled with an ApiVerb value (GET, POST, PUT, DELETE)
 	 * @see ApiVerb
 	 * @return
 	 */
-	public ApiVerb verb();
+	ApiVerb verb();
 	
 	/**
 	 * An array of strings representing media types produced by the method, like application/json, application/xml, ...
 	 * @return
 	 */
-	public String[] produces() default {};
+	String[] produces() default {};
 	
 	/**
 	 * An array of strings representing media types consumed by the method, like application/json, application/xml, ...
 	 * @return
 	 */
-	public String[] consumes() default {};
+	String[] consumes() default {};
 	
 }

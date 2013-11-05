@@ -6,10 +6,12 @@ import java.util.TreeSet;
 import org.jsondoc.core.visitor.Visitable;
 import org.jsondoc.core.visitor.Visitor;
 
-public class JSONDoc implements Visitable {
+public final class JSONDoc implements Visitable {
+
 	private String version;
 	private String basePath;
-	private Set<ApiDoc> apis = new TreeSet<ApiDoc>();
+
+    private Set<ApiDoc> apis = new TreeSet<ApiDoc>();
 	private Set<ApiObjectDoc> objects = new TreeSet<ApiObjectDoc>();
 
 	public JSONDoc(String version, String basePath) {

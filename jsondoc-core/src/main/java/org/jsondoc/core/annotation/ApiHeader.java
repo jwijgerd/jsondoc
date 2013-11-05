@@ -21,12 +21,12 @@ public @interface ApiHeader {
 	 * The name of the header parameter
 	 * @return
 	 */
-	public String name();
+	String name();
 
 	/**
 	 * A description of what the parameter is needed for
 	 * @return
 	 */
-	public String description();
+	String description();
 	
 }

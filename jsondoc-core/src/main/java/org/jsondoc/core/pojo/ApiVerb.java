@@ -1,5 +1,11 @@
 package org.jsondoc.core.pojo;
 
 public enum ApiVerb {
-	GET,POST,PUT,DELETE
+
+	GET,
+    POST,
+    PUT,
+    DELETE,
+    HEAD,
+    OPTIONS
 }

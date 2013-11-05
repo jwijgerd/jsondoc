@@ -191,15 +191,21 @@ public class SpringMvcJSONDocUtils {
     }
 
     private static ApiParamDoc createApiParamDoc(RequestParam annotation, String type) {
-        return new ApiParamDoc(
-                annotation.value(), annotation.value(), type, String.valueOf(annotation.required()), new String[]{}, ""
-        );
+        ApiParamDoc paramDoc = new ApiParamDoc();
+        paramDoc.setName(annotation.value());
+        paramDoc.setDescription(annotation.value());
+        paramDoc.setType(type);
+        paramDoc.setRequired(String.valueOf(annotation.required()));
+        return paramDoc;
     }
 
     private static ApiParamDoc createApiParamDoc(PathVariable annotation, String type) {
-        return new ApiParamDoc(
-                annotation.value(), annotation.value(), type, String.valueOf(true), new String[]{}, ""
-        );
+        ApiParamDoc paramDoc = new ApiParamDoc();
+        paramDoc.setName(annotation.value());
+        paramDoc.setDescription(annotation.value());
+        paramDoc.setType(type);
+        paramDoc.setRequired(String.valueOf(true));
+        return paramDoc;
     }
 
     private static String readPath(RequestMapping baseMapping, RequestMapping methodMapping) {

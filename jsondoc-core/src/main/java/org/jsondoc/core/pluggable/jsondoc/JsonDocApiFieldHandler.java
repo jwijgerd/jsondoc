@@ -1,4 +1,4 @@
-package org.jsondoc.core.pluggable;
+package org.jsondoc.core.pluggable.jsondoc;
 
 import static org.jsondoc.core.util.JSONDocSupport.getFieldObject;
 import static org.jsondoc.core.util.JSONDocSupport.getReturnObject;
@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.jsondoc.core.annotation.ApiObjectField;
+import org.jsondoc.core.pluggable.ApiObjectAnnotationHandler;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectFieldDoc;
 
@@ -23,12 +24,12 @@ public class JsonDocApiFieldHandler implements ApiObjectAnnotationHandler {
     }
 
     @Override
-    public void handle(AnnotatedElement element, ApiObjectDoc apiObject) {
+    public void handle(AnnotatedElement element, ApiObjectDoc doc) {
 
         if (element instanceof Field) {
-            handle((Field)element, apiObject);
+            handle((Field)element, doc);
         } else {
-            handle((Method)element, apiObject);
+            handle((Method)element, doc);
         }
     }
 

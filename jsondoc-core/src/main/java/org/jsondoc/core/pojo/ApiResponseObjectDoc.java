@@ -7,27 +7,15 @@ import org.jsondoc.core.visitor.Visitor;
 
 public final class ApiResponseObjectDoc implements Visitable {
 
-    private String jsondocId = UUID.randomUUID().toString();
+    private final String jsondocId = UUID.randomUUID().toString();
     private String object;
     private String multiple;
     private String mapKeyObject;
     private String mapValueObject;
     private String map;
 
-    public ApiResponseObjectDoc() {
-
-    }
-
-    public ApiResponseObjectDoc(String object,
-                                String mapKeyObject,
-                                String mapValueObject,
-                                String multiple,
-                                String map) {
-        this.object = object;
-        this.multiple = multiple;
-        this.mapKeyObject = mapKeyObject;
-        this.mapValueObject = mapValueObject;
-        this.map = map;
+    public String getJsondocId() {
+        return jsondocId;
     }
 
     public String getObject() {
@@ -68,10 +56,6 @@ public final class ApiResponseObjectDoc implements Visitable {
 
     public void setMap(String map) {
         this.map = map;
-    }
-
-    public String getJsondocId() {
-        return jsondocId;
     }
 
     @Override

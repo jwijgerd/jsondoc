@@ -1,4 +1,4 @@
-package org.jsondoc.core.pluggable;
+package org.jsondoc.core.pluggable.jsondoc;
 
 import static org.jsondoc.core.util.JSONDocSupport.getReturnObject;
 import static org.jsondoc.core.util.JSONDocSupport.isMultiple;
@@ -8,6 +8,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 import org.jsondoc.core.annotation.ApiResponseObject;
+import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
 
