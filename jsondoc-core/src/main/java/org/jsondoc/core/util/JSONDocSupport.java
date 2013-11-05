@@ -18,6 +18,10 @@ public final class JSONDocSupport {
         // private constructor for utility code.
     }
 
+    public static String getParamObjects(Class<?> type, Type genericType) {
+        return analyse(type, genericType)[0];
+    }
+
     public static String getParamObjects(Method method, Integer index) {
         Class<?> type = method.getParameterTypes()[index];
         Type genericType = method.getGenericParameterTypes()[index];

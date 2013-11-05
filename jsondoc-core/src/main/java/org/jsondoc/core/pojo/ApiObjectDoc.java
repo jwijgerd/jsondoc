@@ -15,6 +15,10 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
     private String description;
     private List<ApiObjectFieldDoc> fields = new ArrayList<ApiObjectFieldDoc>();
 
+    public ApiObjectDoc() {
+
+    }
+
     public ApiObjectDoc(String name, String description, List<ApiObjectFieldDoc> fields, ApiVersionDoc version) {
         this.name = name;
         this.description = description;
@@ -26,16 +30,24 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<ApiObjectFieldDoc> getFields() {
         return fields;
     }
 
-    public void removeField(ApiObjectFieldDoc field) {
-        fields.remove(field);
+    public void setFields(List<ApiObjectFieldDoc> fields) {
+        this.fields = fields;
     }
 
     @Override
@@ -49,6 +61,10 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
 
     public ApiVersionDoc getVersion() {
         return version;
+    }
+
+    public void setVersion(ApiVersionDoc version) {
+        this.version = version;
     }
 
     @Override

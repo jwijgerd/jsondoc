@@ -8,8 +8,12 @@ import org.jsondoc.core.visitor.Visitor;
  */
 public class ApiVersionDoc implements Visitable {
 
-    private final int since;
-    private final int until;
+    private int since;
+    private int until;
+
+    public ApiVersionDoc() {
+
+    }
 
     public ApiVersionDoc(int since, int until) {
         this.since = since;
@@ -20,8 +24,16 @@ public class ApiVersionDoc implements Visitable {
         return since;
     }
 
+    public void setSince(int since) {
+        this.since = since;
+    }
+
     public int getUntil() {
         return until;
+    }
+
+    public void setUntil(int until) {
+        this.until = until;
     }
 
     @Override

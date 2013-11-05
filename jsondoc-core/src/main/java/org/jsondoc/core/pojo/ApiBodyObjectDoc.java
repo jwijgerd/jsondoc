@@ -15,6 +15,10 @@ public final class ApiBodyObjectDoc implements Visitable {
     private String mapValueObject;
     private String map;
 
+    public ApiBodyObjectDoc() {
+
+    }
+
     public ApiBodyObjectDoc(String object, String mapKeyObject, String mapValueObject, String multiple, String map) {
         this.object = object;
         this.multiple = multiple;
@@ -27,20 +31,40 @@ public final class ApiBodyObjectDoc implements Visitable {
         return object;
     }
 
+    public void setObject(String object) {
+        this.object = object;
+    }
+
     public String getMultiple() {
         return multiple;
+    }
+
+    public void setMultiple(String multiple) {
+        this.multiple = multiple;
     }
 
     public String getMapKeyObject() {
         return mapKeyObject;
     }
 
+    public void setMapKeyObject(String mapKeyObject) {
+        this.mapKeyObject = mapKeyObject;
+    }
+
     public String getMapValueObject() {
         return mapValueObject;
     }
 
+    public void setMapValueObject(String mapValueObject) {
+        this.mapValueObject = mapValueObject;
+    }
+
     public String getMap() {
         return map;
+    }
+
+    public void setMap(String map) {
+        this.map = map;
     }
 
     public String getJsondocId() {
