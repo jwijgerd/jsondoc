@@ -102,6 +102,11 @@ public final class ApiMethodDoc implements Visitable {
         this.description = description;
     }
 
+    // Backward compatibility.
+    public List<ApiParamDoc> getUrlparameters() {
+        return getPathparameters();
+    }
+
     public List<ApiParamDoc> getPathparameters() {
         return pathparameters;
     }
