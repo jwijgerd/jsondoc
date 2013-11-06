@@ -200,6 +200,17 @@
                         </tr>
                         {{/each}}
                         {{/if}}
+                        {{#if permissions}}
+                        <tr>
+                            <th colspan=2>Permissions</th>
+                        </tr>
+                        {{#each permissions}}
+                        <tr>
+                            <td><code>{{this.name}}</code></td>
+                            <td>{{this.description}}</td>
+                        </tr>
+                        {{/each}}
+                        {{/if}}
                         {{#if headers}}
                         <tr>
                             <th colspan=2>Headers</th>
