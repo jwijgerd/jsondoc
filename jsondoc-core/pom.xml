@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>jsondoc</artifactId>
 		<groupId>org.jsondoc</groupId>
-		<version>1.0.1.9</version>
+		<version>1.0.1.10-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>jsondoc-core</artifactId>
