@@ -183,6 +183,9 @@ public class JsonDocGenerator {
             apiMethodDoc = applyApiMethodHandlers(element, apiMethodDoc, annotation, customApiMethodHandlers);
             apiMethodDoc = applyApiMethodHandlers(element, apiMethodDoc, annotation, apiMethodHandlers);
         }
+        if (apiMethodDoc != null && apiMethodDoc.getPath() == null) {
+            return null;
+        }
         return apiMethodDoc;
     }
 
@@ -195,9 +198,6 @@ public class JsonDocGenerator {
                 apiMethodDoc = ensureNotNull(apiMethodDoc);
                 handler.handle(element, apiMethodDoc);
             }
-        }
-        if (apiMethodDoc != null && apiMethodDoc.getPath() == null) {
-            return null;
         }
         return apiMethodDoc;
     }
