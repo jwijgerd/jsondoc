@@ -1,9 +1,10 @@
 package org.jsondoc.core.annotation;
 
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -12,20 +13,19 @@ import java.lang.annotation.Target;
  * @author Fabio Maffioletti
  */
 @Documented
-@Target(value=ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
+@Target(TYPE)
+@Retention(RUNTIME)
 public @interface Api {
+
+    /**
+     * The name of the API.
+     * @return
+     */
+    String name() default "";
 
 	/**
 	 * A description of what the API does.
 	 * @return
 	 */
-	String description();
-	
-	/**
-	 * The name of the API.
-	 * @return
-	 */
-	String name();
-
+	String description() default "";
 }

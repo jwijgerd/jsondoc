@@ -2,6 +2,7 @@ package org.jsondoc.core.pluggable.jsondoc;
 
 import static org.jsondoc.core.util.JSONDocSupport.getReturnObject;
 import static org.jsondoc.core.util.JSONDocSupport.isMultiple;
+import static org.jsondoc.core.util.StringUtils.hasText;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -26,13 +27,27 @@ public class JsonDocApiResponseHandler implements ApiMethodAnnotationHandler {
     public void handle(AnnotatedElement element, ApiMethodDoc doc) {
 
         Method method = (Method)element;
-        ApiResponseObjectDoc response = new ApiResponseObjectDoc();
+        ApiResponseObjectDoc response = doc.getResponse();
+        if (response == null) {
+            response = new ApiResponseObjectDoc();
+            doc.setResponse(response);
+        }
+
         String[] objectDetails = getReturnObject(method);
-        response.setObject(objectDetails[0]);
-        response.setMapKeyObject(objectDetails[1]);
-        response.setMapValueObject(objectDetails[2]);
-        response.setMultiple(String.valueOf(isMultiple(method)));
-        response.setMap(objectDetails[3]);
-        doc.setResponse(response);
+        if (hasText(response.getObject())) {
+            response.setObject(objectDetails[0]);
+        }
+        if (hasText(response.getMapKeyObject())) {
+            response.setMapKeyObject(objectDetails[1]);
+        }
+        if (hasText(response.getMapValueObject())) {
+            response.setMapValueObject(objectDetails[2]);
+        }
+        if (hasText(response.getMultiple())) {
+            response.setMultiple(String.valueOf(isMultiple(method)));
+        }
+        if (hasText(response.getMap())) {
+            response.setMap(objectDetails[3]);
+        }
     }
 }

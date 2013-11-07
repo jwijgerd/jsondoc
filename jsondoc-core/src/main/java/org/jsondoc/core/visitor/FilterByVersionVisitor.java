@@ -7,7 +7,7 @@ import java.util.Set;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
-import org.jsondoc.core.pojo.ApiObjectFieldDoc;
+import org.jsondoc.core.pojo.ApiObjectPropertyDoc;
 import org.jsondoc.core.pojo.ApiVersionDoc;
 import org.jsondoc.core.pojo.JSONDoc;
 
@@ -63,8 +63,8 @@ public class FilterByVersionVisitor extends AbstractDocVisitor<Void> {
 
     @Override
     public Void visit(ApiObjectDoc object) {
-        List<ApiObjectFieldDoc> fields = object.getFields();
-        for (ApiObjectFieldDoc field : new ArrayList<ApiObjectFieldDoc>(fields)) {
+        List<ApiObjectPropertyDoc> fields = object.getFields();
+        for (ApiObjectPropertyDoc field : new ArrayList<ApiObjectPropertyDoc>(fields)) {
             if (acceptVersion(field.getVersion(), version)) {
                 field.accept(this);
             } else {

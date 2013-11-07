@@ -1,4 +1,4 @@
-package org.jsondoc.springmvc;
+package org.jsondoc.core.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

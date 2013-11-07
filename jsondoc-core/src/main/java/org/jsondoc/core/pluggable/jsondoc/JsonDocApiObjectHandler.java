@@ -1,5 +1,7 @@
 package org.jsondoc.core.pluggable.jsondoc;
 
+import static org.jsondoc.core.util.StringUtils.hasText;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
@@ -20,7 +22,11 @@ public class JsonDocApiObjectHandler implements ApiObjectAnnotationHandler {
     @Override
     public void handle(AnnotatedElement element, ApiObjectDoc doc) {
         ApiObject annotation = element.getAnnotation(ApiObject.class);
-        doc.setName(annotation.name());
-        doc.setDescription(annotation.description());
+        if (hasText(annotation.name())) {
+            doc.setName(annotation.name());
+        }
+        if (hasText(annotation.description())) {
+            doc.setDescription(annotation.description());
+        }
     }
 }

@@ -1,7 +1,7 @@
 package org.jsondoc.core;
 
 import org.jsondoc.core.annotation.ApiObject;
-import org.jsondoc.core.annotation.ApiObjectField;
+import org.jsondoc.core.annotation.ApiObjectProperty;
 import org.jsondoc.core.annotation.ApiVersion;
 
 /**
@@ -12,6 +12,6 @@ import org.jsondoc.core.annotation.ApiVersion;
 public class VersionedObject {
 
     @ApiVersion(since = 5)
-    @ApiObjectField(description = "versioned field")
+    @ApiObjectProperty(description = "versioned field")
     private String field;
 }

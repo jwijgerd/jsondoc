@@ -3,9 +3,9 @@ package org.jsondoc.springmvc.pluggable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
-import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pluggable.ApiAnnotationHandler;
-import org.jsondoc.springmvc.StringUtils;
+import org.jsondoc.core.pojo.ApiDoc;
+import org.jsondoc.core.util.StringUtils;
 import org.springframework.stereotype.Controller;
 
 /**

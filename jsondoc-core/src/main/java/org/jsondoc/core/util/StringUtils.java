@@ -1,4 +1,4 @@
-package org.jsondoc.springmvc;
+package org.jsondoc.core.util;
 
 import static com.google.common.base.CharMatcher.JAVA_UPPER_CASE;
 import static com.google.common.collect.Lists.newArrayList;
@@ -10,9 +10,14 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 /**
- * @author Daniel Ostermeier
+ * Local string related utilities.  Yes, some of these things are available elsewhere,
+ * but why import another dependency for only a few lines of code?
  */
 public class StringUtils {
+
+    public static boolean hasText(String str) {
+        return str != null && str.trim().length() > 0;
+    }
 
     public static String splitCamelCase(String str) {
 

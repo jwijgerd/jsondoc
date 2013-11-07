@@ -11,15 +11,6 @@ public final class ApiErrorDoc implements Visitable {
     private String code;
     private String description;
 
-    public ApiErrorDoc(){
-
-    }
-
-    public ApiErrorDoc(String code, String description) {
-        this.code = code;
-        this.description = description;
-    }
-
     public String getJsondocId() {
         return jsondocId;
     }

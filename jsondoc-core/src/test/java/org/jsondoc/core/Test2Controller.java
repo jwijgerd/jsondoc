@@ -9,7 +9,6 @@ import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
 import org.jsondoc.core.pojo.ApiVerb;
-import org.springframework.http.MediaType;
 
 @Api(name="Test2Controller", description="My test controller #2")
 public class Test2Controller {
@@ -18,8 +17,8 @@ public class Test2Controller {
 			path="/test2", 
 			verb=ApiVerb.POST, 
 			description="test method for controller 2", 
-			consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+			consumes={"application/json", "application/xml"},
+			produces={"application/json", "application/xml"}
 	)
 	public @ApiResponseObject String save(@ApiBodyObject List<String> names) {
 		return null;
@@ -29,8 +28,8 @@ public class Test2Controller {
 			path="/testMap", 
 			verb=ApiVerb.GET, 
 			description="map method for controller 2", 
-			consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+			consumes={"application/json", "application/xml"},
+			produces={"application/json", "application/xml"}
 	)
 	public @ApiResponseObject Map<String, Parent> map(@ApiBodyObject List<String> names) {
 		return null;
@@ -40,8 +39,8 @@ public class Test2Controller {
 			path="/testMapBody", 
 			verb=ApiVerb.GET, 
 			description="map body method for controller 2", 
-			consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+			consumes={"application/json", "application/xml"},
+			produces={"application/json", "application/xml"}
 	)
 	public @ApiResponseObject String map(@ApiBodyObject Map<String, Parent> names) {
 		return null;
@@ -52,7 +51,7 @@ public class Test2Controller {
 			verb=ApiVerb.DELETE, 
 			description="delete test method for controller 2", 
 			consumes={},
-			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+			produces={"application/json", "application/xml"}
 	)
 	public @ApiResponseObject void delete(@ApiParam(name="parent", description="A parent object") Parent parent) {
 		

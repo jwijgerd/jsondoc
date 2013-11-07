@@ -6,23 +6,23 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jsondoc.core.annotation.ApiObject;
-import org.jsondoc.core.annotation.ApiObjectField;
+import org.jsondoc.core.annotation.ApiObjectProperty;
 
 @ApiObject(name = "user")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User {
 
-	@ApiObjectField(description = "The ID of the user")
+	@ApiObjectProperty(description = "The ID of the user")
 	@XmlElement(name = "id")
 	private Integer id;
-	@ApiObjectField(description = "The username of the user")
+	@ApiObjectProperty(description = "The username of the user")
 	@XmlElement(name = "username")
 	private String username;
-	@ApiObjectField(description = "The age of the user")
+	@ApiObjectProperty(description = "The age of the user")
 	@XmlElement(name = "age")
 	private Integer age;
-	@ApiObjectField(description = "The gender of the user")
+	@ApiObjectProperty(description = "The gender of the user")
 	@XmlElement(name = "gender")
 	private String gender;
 

@@ -1,5 +1,7 @@
 package org.jsondoc.core.pojo;
 
+import static org.jsondoc.core.util.StringUtils.hasText;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -68,5 +70,9 @@ public final class ApiDoc implements Comparable<ApiDoc>, Visitable {
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    public boolean isValid() {
+        return hasText(name);
     }
 }

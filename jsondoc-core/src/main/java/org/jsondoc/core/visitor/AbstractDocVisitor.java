@@ -6,7 +6,7 @@ import org.jsondoc.core.pojo.ApiErrorDoc;
 import org.jsondoc.core.pojo.ApiHeaderDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
-import org.jsondoc.core.pojo.ApiObjectFieldDoc;
+import org.jsondoc.core.pojo.ApiObjectPropertyDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
 import org.jsondoc.core.pojo.ApiPermissionDoc;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
@@ -19,7 +19,7 @@ import org.jsondoc.core.pojo.JSONDoc;
 public abstract class AbstractDocVisitor<T> implements Visitor<T> {
 
     @Override
-    public T visit(ApiBodyObjectDoc apiBodyObject) {
+    public T visit(ApiBodyObjectDoc apiBody) {
         return null;
     }
 
@@ -54,7 +54,7 @@ public abstract class AbstractDocVisitor<T> implements Visitor<T> {
     }
 
     @Override
-    public T visit(ApiObjectFieldDoc apiObjectField) {
+    public T visit(ApiObjectPropertyDoc apiObjectProperty) {
         return null;
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractDocVisitor<T> implements Visitor<T> {
     }
 
     @Override
-    public T visit(ApiResponseObjectDoc apiResponseObject) {
+    public T visit(ApiResponseObjectDoc apiResponse) {
         return null;
     }
 

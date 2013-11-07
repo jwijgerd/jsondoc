@@ -1,5 +1,9 @@
 package org.jsondoc.core.pojo;
 
+import static org.jsondoc.core.util.StringUtils.hasText;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.jsondoc.core.visitor.Visitable;
@@ -14,8 +18,9 @@ public final class ApiParamDoc implements Visitable {
 
     private String type;
     private String required;
-    private String[] allowedvalues = new String[0];
+    private List<String> allowedvalues = new ArrayList<String>();
     private String format;
+    private ApiParamType paramType;
 
     public String getType() {
         return type;
@@ -49,12 +54,20 @@ public final class ApiParamDoc implements Visitable {
         this.required = required;
     }
 
-    public String[] getAllowedvalues() {
+    public List<String> getAllowedvalues() {
         return allowedvalues;
     }
 
-    public void setAllowedvalues(String[] allowedvalues) {
+    public void setAllowedvalues(List<String> allowedvalues) {
         this.allowedvalues = allowedvalues;
+    }
+
+    public void addAllowedvalues(String... allowedvalues) {
+        for (String allowedvalue : allowedvalues) {
+            if (!this.allowedvalues.contains(allowedvalue)) {
+                this.allowedvalues.add(allowedvalue);
+            }
+        }
     }
 
     public String getFormat() {
@@ -72,5 +85,17 @@ public final class ApiParamDoc implements Visitable {
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    public void setParamType(ApiParamType paramType) {
+        this.paramType = paramType;
+    }
+
+    public ApiParamType getParamType() {
+        return paramType;
+    }
+
+    public boolean isValid() {
+        return paramType != null && paramType != ApiParamType.UNDEFINED && hasText(name);
     }
 }

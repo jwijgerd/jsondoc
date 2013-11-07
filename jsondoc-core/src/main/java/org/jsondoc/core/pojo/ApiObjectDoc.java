@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.jsondoc.core.util.StringUtils;
 import org.jsondoc.core.visitor.Visitable;
 import org.jsondoc.core.visitor.Visitor;
 
@@ -14,18 +15,7 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
     private String name;
     private String description;
     private ApiVersionDoc version;
-    private List<ApiObjectFieldDoc> fields = new ArrayList<ApiObjectFieldDoc>();
-
-    public ApiObjectDoc() {
-
-    }
-
-    public ApiObjectDoc(String name, String description, List<ApiObjectFieldDoc> fields, ApiVersionDoc version) {
-        this.name = name;
-        this.description = description;
-        this.fields = fields;
-        this.version = version;
-    }
+    private List<ApiObjectPropertyDoc> fields = new ArrayList<ApiObjectPropertyDoc>();
 
     public String getJsondocId() {
         return jsondocId;
@@ -55,17 +45,17 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
         this.version = version;
     }
 
-    public List<ApiObjectFieldDoc> getFields() {
+    public List<ApiObjectPropertyDoc> getFields() {
         return fields;
     }
 
-    public void setFields(List<ApiObjectFieldDoc> fields) {
+    public void setFields(List<ApiObjectPropertyDoc> fields) {
         this.fields = fields;
     }
 
-    public ApiObjectFieldDoc getField(String name) {
-        for (ApiObjectFieldDoc field : fields) {
-            if (field.getName().compareTo(name) == 0) {
+    public ApiObjectPropertyDoc getField(String actualName) {
+        for (ApiObjectPropertyDoc field : fields) {
+            if (field.getActualName().compareTo(actualName) == 0) {
                 return field;
             }
         }
@@ -80,5 +70,9 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    public boolean isValid() {
+        return StringUtils.hasText(name);
     }
 }

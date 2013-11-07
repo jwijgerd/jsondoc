@@ -1,5 +1,7 @@
 package org.jsondoc.core.pluggable.jsondoc;
 
+import static org.jsondoc.core.util.StringUtils.hasText;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
@@ -21,9 +23,17 @@ public class JsonDocApiErrorHandler implements ApiMethodAnnotationHandler {
 
     @Override
     public void handle(AnnotatedElement element, ApiMethodDoc doc) {
-        ApiErrors annotation = element.getAnnotation(ApiErrors.class);
-        for (ApiError apiError : annotation.apierrors()) {
-            doc.getApierrors().add(new ApiErrorDoc(apiError.code(), apiError.description()));
+        ApiErrors errorsAnnotation = element.getAnnotation(ApiErrors.class);
+        for (ApiError errorAnnotation : errorsAnnotation.apierrors()) {
+            ApiErrorDoc errorDoc = doc.getError(errorAnnotation.code());
+            if (errorDoc == null) {
+                errorDoc = new ApiErrorDoc();
+                errorDoc.setCode(errorAnnotation.code());
+                doc.getApierrors().add(errorDoc);
+            }
+            if (hasText(errorAnnotation.description())) {
+                errorDoc.setDescription(errorAnnotation.description());
+            }
         }
     }
 }

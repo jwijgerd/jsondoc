@@ -11,7 +11,7 @@ import java.util.TreeSet;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
-import org.jsondoc.core.pojo.ApiObjectFieldDoc;
+import org.jsondoc.core.pojo.ApiObjectPropertyDoc;
 import org.jsondoc.core.pojo.JSONDoc;
 
 /**
@@ -50,7 +50,7 @@ public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
 
     @Override
     public Void visit(ApiObjectDoc object) {
-        List<ApiObjectFieldDoc> fields = object.getFields();
+        List<ApiObjectPropertyDoc> fields = object.getFields();
         Collections.sort(fields, new ApiObjectFieldComparator());
         return null;
     }
@@ -78,11 +78,11 @@ public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
         }
     }
 
-    private static final class ApiObjectFieldComparator implements Comparator<ApiObjectFieldDoc> {
+    private static final class ApiObjectFieldComparator implements Comparator<ApiObjectPropertyDoc> {
         private final Collator collator = Collator.getInstance();
 
         @Override
-        public int compare(ApiObjectFieldDoc o1, ApiObjectFieldDoc o2) {
+        public int compare(ApiObjectPropertyDoc o1, ApiObjectPropertyDoc o2) {
             return collator.compare(o1.getName(), o2.getName());
         }
     }

@@ -8,7 +8,6 @@ import javax.servlet.ServletContext;
 import org.jsondoc.core.annotation.Api;
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.pojo.JSONDoc;
-import org.jsondoc.core.util.JSONDocUtils;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;

@@ -3,6 +3,7 @@ package org.jsondoc.core.pluggable;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Sets.newHashSet;
+import static org.jsondoc.core.util.Parameter.parametersFrom;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -10,22 +11,22 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiBodyObjectHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiErrorHandler;
-import org.jsondoc.core.pluggable.jsondoc.JsonDocApiFieldHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiHeaderHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiMethodHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiObjectHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiParamHandler;
+import org.jsondoc.core.pluggable.jsondoc.JsonDocApiPropertyHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiResponseHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiVersionHandler;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
+import org.jsondoc.core.pojo.ApiParamDoc;
 import org.jsondoc.core.pojo.JSONDoc;
+import org.jsondoc.core.util.Parameter;
 
 import com.google.common.collect.Lists;
 
@@ -37,10 +38,12 @@ public class JsonDocGenerator {
     private final List<ApiAnnotationHandler> apiHandlers = newLinkedList();
     private final List<ApiMethodAnnotationHandler> apiMethodHandlers = newLinkedList();
     private final List<ApiObjectAnnotationHandler> apiObjectHandlers = newLinkedList();
+    private final List<ApiParamAnnotationHandler> apiParamHandlers = newLinkedList();
 
     private final List<ApiAnnotationHandler> customApiHandlers = newLinkedList();
     private final List<ApiMethodAnnotationHandler> customApiMethodHandlers = newLinkedList();
     private final List<ApiObjectAnnotationHandler> customApiObjectHandlers = newLinkedList();
+    private final List<ApiParamAnnotationHandler> customApiParamHandlers = newLinkedList();
 
     public JsonDocGenerator() {
 
@@ -52,13 +55,14 @@ public class JsonDocGenerator {
         apiMethodHandlers.add(new JsonDocApiMethodHandler());
         apiMethodHandlers.add(new JsonDocApiHeaderHandler());
         apiMethodHandlers.add(new JsonDocApiBodyObjectHandler());
-        apiMethodHandlers.add(new JsonDocApiParamHandler());
         apiMethodHandlers.add(new JsonDocApiErrorHandler());
         apiMethodHandlers.add(new JsonDocApiResponseHandler());
         apiMethodHandlers.add(new JsonDocApiVersionHandler());
 
+        apiParamHandlers.add(new JsonDocApiParamHandler());
+
         apiObjectHandlers.add(new JsonDocApiObjectHandler());
-        apiObjectHandlers.add(new JsonDocApiFieldHandler());
+        apiObjectHandlers.add(new JsonDocApiPropertyHandler());
         apiObjectHandlers.add(new JsonDocApiVersionHandler());
     }
 
@@ -68,6 +72,10 @@ public class JsonDocGenerator {
 
     public void register(ApiMethodAnnotationHandler handler) {
         customApiMethodHandlers.add(handler);
+    }
+
+    public void register(ApiParamAnnotationHandler handler) {
+        customApiParamHandlers.add(handler);
     }
 
     public void register(ApiObjectAnnotationHandler handler) {
@@ -93,7 +101,7 @@ public class JsonDocGenerator {
         List<ApiDoc> apiDocs = newArrayList();
         for (Class<?> clazz : classes) {
             ApiDoc apiDoc = createApiDoc(clazz);
-            if (apiDoc != null) {
+            if (apiDoc.isValid()) {
                 apiDocs.add(apiDoc);
             }
         }
@@ -103,19 +111,31 @@ public class JsonDocGenerator {
     public ApiDoc createApiDoc(Class<?> clazz) {
 
         // Process parents first as they give the most 'general' results.
-        ApiDoc apiDoc = clazz.getSuperclass() != null ? createApiDoc(clazz.getSuperclass()) : null;
+        ApiDoc apiDoc = clazz.getSuperclass() != null ? createApiDoc(clazz.getSuperclass()) : new ApiDoc();
 
         // Process class level annotations.
-        apiDoc = applyApiHandlers(clazz, apiDoc);
-        if (apiDoc != null) {
+        applyApiHandlers(clazz, apiDoc);
+        if (apiDoc.isValid()) {
             for (Method method : clazz.getDeclaredMethods()) {
-                ApiMethodDoc apiMethodDoc = applyApiMethodHandlers(method, null);
-
-                if (apiMethodDoc != null) {
+                ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
+                applyApiMethodHandlers(method, apiMethodDoc);
+                if (apiMethodDoc.isValid()) {
                     apiDoc.addMethod(apiMethodDoc);
-
-                    for (Parameter parameter : compileParameters(method)) {
-                        applyApiMethodHandlers(parameter, apiMethodDoc);
+                    for (Parameter parameter : parametersFrom(method)) {
+                        ApiParamDoc apiParamDoc = new ApiParamDoc();
+                        applyApiParamHandlers(parameter, apiParamDoc);
+                        if (apiParamDoc.isValid()) {
+                            switch (apiParamDoc.getParamType()) {
+                                case PATH:
+                                    apiMethodDoc.getPathparameters().add(apiParamDoc);
+                                    break;
+                                case QUERY:
+                                    apiMethodDoc.getQueryparameters().add(apiParamDoc);
+                                    break;
+                                case UNDEFINED:
+                                    break;
+                            }
+                        }
                     }
                 }
             }
@@ -131,7 +151,7 @@ public class JsonDocGenerator {
         List<ApiObjectDoc> apiDocs = newArrayList();
         for (Class<?> clazz : classes) {
             ApiObjectDoc objectDoc = createObjectDoc(clazz);
-            if (objectDoc != null) {
+            if (objectDoc.isValid()) {
                 apiDocs.add(objectDoc);
             }
         }
@@ -141,11 +161,11 @@ public class JsonDocGenerator {
     public ApiObjectDoc createObjectDoc(Class<?> clazz) {
 
         // Process parents first as they give the most 'general' results.
-        ApiObjectDoc apiObjectDoc = clazz.getSuperclass() != null ? createObjectDoc(clazz.getSuperclass()) : null;
+        ApiObjectDoc apiObjectDoc = clazz.getSuperclass() != null ? createObjectDoc(clazz.getSuperclass()) : new ApiObjectDoc();
 
         // Process class level annotations.
-        apiObjectDoc = applyApiObjectHandlers(clazz, apiObjectDoc);
-        if (apiObjectDoc != null) {
+        applyApiObjectHandlers(clazz, apiObjectDoc);
+        if (apiObjectDoc.isValid()) {
             for (Field field : clazz.getDeclaredFields()) {
                 applyApiObjectHandlers(field, apiObjectDoc);
             }
@@ -156,104 +176,81 @@ public class JsonDocGenerator {
         return apiObjectDoc;
     }
 
-    private ApiDoc applyApiHandlers(AnnotatedElement element, @Nullable ApiDoc apiDoc) {
+    private void applyApiHandlers(AnnotatedElement element, ApiDoc apiDoc) {
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            apiDoc = applyApiHandlers(element, apiDoc, annotation, customApiHandlers);
-            apiDoc = applyApiHandlers(element, apiDoc, annotation, apiHandlers);
+            applyApiHandlers(element, apiDoc, annotation, customApiHandlers);
         }
-        // Hack: the ApiVersion annotation is triggering the handling for non Api instances :(
-        if (apiDoc != null && apiDoc.getName() == null) {
-            return null;
+        for (Annotation annotation : element.getDeclaredAnnotations()) {
+            applyApiHandlers(element, apiDoc, annotation, apiHandlers);
         }
-        return apiDoc;
     }
 
-    private ApiDoc applyApiHandlers(AnnotatedElement element, ApiDoc apiDoc, Annotation annotation, Iterable<ApiAnnotationHandler> apiHandlers) {
+    private void applyApiHandlers(AnnotatedElement element, ApiDoc apiDoc, Annotation annotation, Iterable<ApiAnnotationHandler> apiHandlers) {
         for (ApiAnnotationHandler apiHandler : apiHandlers) {
             if (apiHandler.canHandle(element, annotation)) {
-                apiDoc = ensureNotNull(apiDoc);
                 apiHandler.handle(element, apiDoc);
             }
         }
-        return apiDoc;
     }
 
-    private ApiMethodDoc applyApiMethodHandlers(AnnotatedElement element, @Nullable ApiMethodDoc apiMethodDoc) {
+    private void applyApiMethodHandlers(AnnotatedElement element, ApiMethodDoc apiMethodDoc) {
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            apiMethodDoc = applyApiMethodHandlers(element, apiMethodDoc, annotation, customApiMethodHandlers);
-            apiMethodDoc = applyApiMethodHandlers(element, apiMethodDoc, annotation, apiMethodHandlers);
+            applyApiMethodHandlers(element, apiMethodDoc, annotation, customApiMethodHandlers);
         }
-        if (apiMethodDoc != null && apiMethodDoc.getPath() == null) {
-            return null;
+        for (Annotation annotation : element.getDeclaredAnnotations()) {
+            applyApiMethodHandlers(element, apiMethodDoc, annotation, apiMethodHandlers);
         }
-        return apiMethodDoc;
     }
 
-    private ApiMethodDoc applyApiMethodHandlers(AnnotatedElement element,
+    private void applyApiMethodHandlers(AnnotatedElement element,
                                                 ApiMethodDoc apiMethodDoc,
                                                 Annotation annotation,
                                                 Iterable<ApiMethodAnnotationHandler> apiMethodHandlers) {
         for (ApiMethodAnnotationHandler handler : apiMethodHandlers) {
             if (handler.canHandle(element, annotation)) {
-                apiMethodDoc = ensureNotNull(apiMethodDoc);
                 handler.handle(element, apiMethodDoc);
             }
         }
-        return apiMethodDoc;
     }
 
-    private ApiObjectDoc applyApiObjectHandlers(AnnotatedElement element, @Nullable ApiObjectDoc apiObjectDoc) {
+    private void applyApiParamHandlers(AnnotatedElement element, ApiParamDoc apiParamDoc) {
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            apiObjectDoc = applyApiObjectHandlers(element, apiObjectDoc, annotation, customApiObjectHandlers);
-            apiObjectDoc = applyApiObjectHandlers(element, apiObjectDoc, annotation, apiObjectHandlers);
+            applyApiParamHandlers(element, apiParamDoc, annotation, customApiParamHandlers);
         }
-        // Hack: the ApiVersion annotation is triggering the handling for non ApiObject instances :(
-        if (apiObjectDoc != null && apiObjectDoc.getName() == null) {
-            return null;
+        for (Annotation annotation : element.getDeclaredAnnotations()) {
+            applyApiParamHandlers(element, apiParamDoc, annotation, apiParamHandlers);
         }
-        return apiObjectDoc;
     }
 
-    private ApiObjectDoc applyApiObjectHandlers(AnnotatedElement element,
+    private void applyApiParamHandlers(AnnotatedElement element,
+                                               ApiParamDoc apiParamDoc,
+                                                Annotation annotation,
+                                                Iterable<ApiParamAnnotationHandler> apiMethodHandlers) {
+        for (ApiParamAnnotationHandler handler : apiMethodHandlers) {
+            if (handler.canHandle(element, annotation)) {
+                handler.handle(element, apiParamDoc);
+            }
+        }
+    }
+
+
+    private void applyApiObjectHandlers(AnnotatedElement element, ApiObjectDoc apiObjectDoc) {
+        for (Annotation annotation : element.getDeclaredAnnotations()) {
+            applyApiObjectHandlers(element, apiObjectDoc, annotation, customApiObjectHandlers);
+        }
+        for (Annotation annotation : element.getDeclaredAnnotations()) {
+            applyApiObjectHandlers(element, apiObjectDoc, annotation, apiObjectHandlers);
+        }
+    }
+
+    private void applyApiObjectHandlers(AnnotatedElement element,
                                                 ApiObjectDoc apiObjectDoc,
                                                 Annotation annotation,
                                                 Iterable<ApiObjectAnnotationHandler> apiObjectHandlers) {
         for (ApiObjectAnnotationHandler apiHandler : apiObjectHandlers) {
             if (apiHandler.canHandle(element, annotation)) {
-                apiObjectDoc = ensureNotNull(apiObjectDoc);
                 apiHandler.handle(element, apiObjectDoc);
             }
         }
-        return apiObjectDoc;
-    }
-
-    private ApiMethodDoc ensureNotNull(ApiMethodDoc doc) {
-        if (doc != null) {
-            return doc;
-        }
-        return new ApiMethodDoc();
-    }
-
-    private ApiDoc ensureNotNull(ApiDoc doc) {
-        if (doc != null) {
-            return doc;
-        }
-        return new ApiDoc();
-    }
-
-    private ApiObjectDoc ensureNotNull(ApiObjectDoc doc) {
-        if (doc != null) {
-            return doc;
-        }
-        return new ApiObjectDoc();
-    }
-
-    private List<Parameter> compileParameters(Method method) {
-
-        List<Parameter> parameters = newArrayList();
-        for (int i = 0; i < method.getParameterTypes().length; i++) {
-            parameters.add(new Parameter(method, i));
-        }
-        return parameters;
     }
 }

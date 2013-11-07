@@ -12,11 +12,6 @@ public final class ApiHeaderDoc implements Visitable {
     private String name;
     private String description;
 
-    public ApiHeaderDoc(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
     public String getJsondocId() {
         return jsondocId;
     }

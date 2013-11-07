@@ -7,5 +7,6 @@ public enum ApiVerb {
     PUT,
     DELETE,
     HEAD,
-    OPTIONS
+    OPTIONS,
+    UNDEFINED
 }

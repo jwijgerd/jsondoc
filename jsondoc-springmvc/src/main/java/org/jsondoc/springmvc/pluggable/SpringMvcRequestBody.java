@@ -7,9 +7,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
 import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
-import org.jsondoc.core.pluggable.Parameter;
 import org.jsondoc.core.pojo.ApiBodyObjectDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
+import org.jsondoc.core.util.Parameter;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**

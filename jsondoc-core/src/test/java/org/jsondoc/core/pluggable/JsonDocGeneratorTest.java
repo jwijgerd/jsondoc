@@ -3,7 +3,6 @@ package org.jsondoc.core.pluggable;
 import org.jsondoc.core.Child;
 import org.jsondoc.core.Parent;
 import org.jsondoc.core.Test1Controller;
-import org.jsondoc.core.Test2Controller;
 import org.jsondoc.core.Test3Controller;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;

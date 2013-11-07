@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.jsondoc.core.util.StringUtils;
 import org.jsondoc.core.visitor.Visitable;
 import org.jsondoc.core.visitor.Visitor;
 
@@ -70,12 +71,28 @@ public final class ApiMethodDoc implements Visitable {
         this.produces = produces;
     }
 
+    public void addProduces(String... produces) {
+        for (String c : produces) {
+            if (!this.produces.contains(c)) {
+                this.produces.add(c);
+            }
+        }
+    }
+
     public List<String> getConsumes() {
         return consumes;
     }
 
     public void setConsumes(List<String> consumes) {
         this.consumes = consumes;
+    }
+
+    public void addConsumes(String... consumes) {
+        for (String c : consumes) {
+            if (!this.consumes.contains(c)) {
+                this.consumes.add(c);
+            }
+        }
     }
 
     public ApiVerb getVerb() {
@@ -115,12 +132,29 @@ public final class ApiMethodDoc implements Visitable {
         this.pathparameters = pathparameters;
     }
 
+    public ApiParamDoc getPathparameter(String name) {
+        return findApiParamDocByName(name, pathparameters);
+    }
+
     public List<ApiParamDoc> getQueryparameters() {
         return queryparameters;
     }
 
     public void setQueryparameters(List<ApiParamDoc> queryparameters) {
         this.queryparameters = queryparameters;
+    }
+
+    public ApiParamDoc getQueryparameter(String name) {
+        return findApiParamDocByName(name, queryparameters);
+    }
+
+    private ApiParamDoc findApiParamDocByName(String name, Iterable<ApiParamDoc> params) {
+        for (ApiParamDoc paramDoc : params) {
+            if (paramDoc.getName().compareTo(name) == 0) {
+                return paramDoc;
+            }
+        }
+        return null;
     }
 
     public ApiResponseObjectDoc getResponse() {
@@ -167,5 +201,9 @@ public final class ApiMethodDoc implements Visitable {
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    public boolean isValid() {
+        return StringUtils.hasText(path);
     }
 }

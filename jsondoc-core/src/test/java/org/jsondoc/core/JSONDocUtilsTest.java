@@ -1,10 +1,8 @@
 package org.jsondoc.core;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -13,8 +11,7 @@ import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
-import org.jsondoc.core.pojo.ApiObjectFieldDoc;
-import org.jsondoc.core.pojo.ApiParamDoc;
+import org.jsondoc.core.pojo.ApiObjectPropertyDoc;
 import org.jsondoc.core.pojo.JSONDoc;
 import org.jsondoc.core.util.JSONDocUtils;
 import org.junit.Test;
@@ -48,7 +45,7 @@ public class JSONDocUtilsTest {
         assertThat(object.getName(), is("versioned object"));
         assertThat(object.getVersion().getSince(), is(2));
 
-        ApiObjectFieldDoc field = object.getFields().get(0);
+        ApiObjectPropertyDoc field = object.getFields().get(0);
         assertThat(field.getName(), is("field"));
         assertThat(field.getVersion().getSince(), is(5));
 

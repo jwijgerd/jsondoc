@@ -1,9 +1,12 @@
-package org.jsondoc.core.pluggable;
+package org.jsondoc.core.util;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Since the jdk does not provide a Parameter object, here it is.  It is backed
@@ -70,5 +73,13 @@ public class Parameter implements AnnotatedElement {
     @Override
     public Annotation[] getDeclaredAnnotations() {
         return method.getParameterAnnotations()[index];
+    }
+
+    public static List<Parameter> parametersFrom(Method method) {
+      List<Parameter> parameters = newArrayList();
+        for (int i = 0; i < method.getParameterTypes().length; i++) {
+            parameters.add(new Parameter(method, i));
+        }
+        return parameters;
     }
 }

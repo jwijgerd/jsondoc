@@ -6,17 +6,17 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jsondoc.core.annotation.ApiObject;
-import org.jsondoc.core.annotation.ApiObjectField;
+import org.jsondoc.core.annotation.ApiObjectProperty;
 
 @ApiObject(name = "country")
 @XmlRootElement
 public class Country extends Location {
 
-	@ApiObjectField(description = "The name of the country")
+	@ApiObjectProperty(description = "The name of the country")
 	@XmlElement
 	private String name;
 
-	@ApiObjectField(description = "The cities of the country")
+	@ApiObjectProperty(description = "The cities of the country")
 	@XmlElement
 	private List<City> cities;
 

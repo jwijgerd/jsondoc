@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @author Daniel Ostermeier
  */
 @Documented
-@Target(value= {TYPE, FIELD, METHOD})
+@Target({TYPE, FIELD, METHOD})
 @Retention(RUNTIME)
 public @interface ApiVersion {
 

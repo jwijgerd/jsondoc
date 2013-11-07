@@ -1,9 +1,10 @@
 package org.jsondoc.core.annotation;
 
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -13,8 +14,8 @@ import java.lang.annotation.Target;
  *
  */
 @Documented
-@Target(value = ElementType.ANNOTATION_TYPE)
-@Retention(RetentionPolicy.RUNTIME)
+@Target(ANNOTATION_TYPE)
+@Retention(RUNTIME)
 public @interface ApiError {
 
 	/**
@@ -27,6 +28,5 @@ public @interface ApiError {
 	 * A description of what the error code means
 	 * @return
 	 */
-	String description();
-	
+	String description() default "";
 }

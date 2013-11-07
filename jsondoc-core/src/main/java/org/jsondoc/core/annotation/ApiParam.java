@@ -1,29 +1,30 @@
 package org.jsondoc.core.annotation;
 
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.jsondoc.core.pojo.ApiParamType.UNDEFINED;
+
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.jsondoc.core.pojo.ApiParamType;
 
 /**
- * This annotation is to be used inside an annotation of type ApiParams
- * @see ApiParams
- * @author Fabio Maffioletti
+ * This annotation is to be used inside an annotation of type ApiParams.
  *
+ * @author Fabio Maffioletti
  */
 @Documented
-@Target(value=ElementType.PARAMETER)
-@Retention(RetentionPolicy.RUNTIME)
+@Target(PARAMETER)
+@Retention(RUNTIME)
 public @interface ApiParam {
 
 	/**
 	 * The name of the url parameter, as expected by the server
 	 * @return
 	 */
-	String name();
+	String name() default "";
 
 	/**
 	 * A description of what the parameter is needed for
@@ -53,5 +54,5 @@ public @interface ApiParam {
      + Whether this is a path parameter or a query parameter
      + @return
      */
-    ApiParamType paramType() default ApiParamType.PATH;
+    ApiParamType paramType() default UNDEFINED;
 }

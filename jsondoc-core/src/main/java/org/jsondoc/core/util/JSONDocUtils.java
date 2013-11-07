@@ -25,7 +25,7 @@ import org.jsondoc.core.annotation.ApiHeader;
 import org.jsondoc.core.annotation.ApiHeaders;
 import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiObject;
-import org.jsondoc.core.annotation.ApiObjectField;
+import org.jsondoc.core.annotation.ApiObjectProperty;
 import org.jsondoc.core.annotation.ApiParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
 import org.jsondoc.core.annotation.ApiVersion;
@@ -35,14 +35,13 @@ import org.jsondoc.core.pojo.ApiErrorDoc;
 import org.jsondoc.core.pojo.ApiHeaderDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
-import org.jsondoc.core.pojo.ApiObjectFieldDoc;
+import org.jsondoc.core.pojo.ApiObjectPropertyDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
 import org.jsondoc.core.pojo.ApiParamType;
 import org.jsondoc.core.pojo.ApiResponseObjectDoc;
 import org.jsondoc.core.pojo.ApiVersionDoc;
 import org.jsondoc.core.pojo.JSONDoc;
 import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 public final class JSONDocUtils {
@@ -142,7 +141,10 @@ public final class JSONDocUtils {
         if (method.isAnnotationPresent(ApiErrors.class)) {
             ApiErrors annotation = method.getAnnotation(ApiErrors.class);
             for (ApiError apiError : annotation.apierrors()) {
-                apiMethodDocs.add(new ApiErrorDoc(apiError.code(), apiError.description()));
+                ApiErrorDoc errorDoc = new ApiErrorDoc();
+                errorDoc.setCode(apiError.code());
+                errorDoc.setDescription(apiError.description());
+                apiMethodDocs.add(errorDoc);
             }
         }
         return apiMethodDocs;
@@ -153,7 +155,10 @@ public final class JSONDocUtils {
         if (element.isAnnotationPresent(ApiHeaders.class)) {
             ApiHeaders annotation = element.getAnnotation(ApiHeaders.class);
             for (ApiHeader apiHeader : annotation.headers()) {
-                docs.add(new ApiHeaderDoc(apiHeader.name(), apiHeader.description()));
+                ApiHeaderDoc headerDoc = new ApiHeaderDoc();
+                headerDoc.setName(apiHeader.name());
+                headerDoc.setDescription(apiHeader.description());
+                docs.add(headerDoc);
             }
         }
         return docs;
@@ -182,9 +187,9 @@ public final class JSONDocUtils {
             return null;
         }
 
-        List<ApiObjectFieldDoc> fieldDocs = new ArrayList<ApiObjectFieldDoc>();
+        List<ApiObjectPropertyDoc> fieldDocs = new ArrayList<ApiObjectPropertyDoc>();
         for (Field field : clazz.getDeclaredFields()) {
-            if (field.getAnnotation(ApiObjectField.class) != null) {
+            if (field.getAnnotation(ApiObjectProperty.class) != null) {
                 fieldDocs.add(createApiObjectFieldDoc(field));
             }
         }
@@ -198,13 +203,18 @@ public final class JSONDocUtils {
                 }
             }
         }
-        return new ApiObjectDoc(annotation.name(), annotation.description(), fieldDocs, createApiVersionDoc(clazz));
+        ApiObjectDoc objectDoc = new ApiObjectDoc();
+        objectDoc.setName(annotation.name());
+        objectDoc.setDescription(annotation.description());
+        objectDoc.setFields(fieldDocs);
+        objectDoc.setVersion(createApiVersionDoc(clazz));
+        return objectDoc;
     }
 
-    public static ApiObjectFieldDoc createApiObjectFieldDoc(Field field) {
-        ApiObjectField annotation = field.getAnnotation(ApiObjectField.class);
+    public static ApiObjectPropertyDoc createApiObjectFieldDoc(Field field) {
+        ApiObjectProperty annotation = field.getAnnotation(ApiObjectProperty.class);
 
-        ApiObjectFieldDoc apiPojoFieldDoc = new ApiObjectFieldDoc();
+        ApiObjectPropertyDoc apiPojoFieldDoc = new ApiObjectPropertyDoc();
         apiPojoFieldDoc.setName(field.getName());
         apiPojoFieldDoc.setDescription(annotation.description());
         apiPojoFieldDoc.setVersion(createApiVersionDoc(field));
@@ -212,7 +222,7 @@ public final class JSONDocUtils {
         apiPojoFieldDoc.setType(typeChecks[0]);
         apiPojoFieldDoc.setMultiple(String.valueOf(isMultiple(field.getType())));
         apiPojoFieldDoc.setFormat(annotation.format());
-        apiPojoFieldDoc.setAllowedvalues(annotation.allowedvalues());
+        apiPojoFieldDoc.setAllowedvalues(Arrays.asList(annotation.allowedvalues()));
         apiPojoFieldDoc.setMapKeyObject(typeChecks[1]);
         apiPojoFieldDoc.setMapValueObject(typeChecks[2]);
         apiPojoFieldDoc.setMap(typeChecks[3]);
@@ -255,7 +265,7 @@ public final class JSONDocUtils {
         paramDoc.setDescription(annotation.description());
         paramDoc.setType(type);
         paramDoc.setRequired(String.valueOf(annotation.required()));
-        paramDoc.setAllowedvalues(annotation.allowedvalues());
+        paramDoc.setAllowedvalues(Arrays.asList(annotation.allowedvalues()));
         paramDoc.setFormat(annotation.format());
         return paramDoc;
     }

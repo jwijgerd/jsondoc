@@ -1,7 +1,7 @@
 package org.jsondoc.springmvc.pluggable;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.jsondoc.springmvc.ListUtils.merge;
+import static org.jsondoc.core.util.ListUtils.merge;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -14,7 +14,7 @@ import org.jsondoc.core.pojo.ApiHeaderDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiVerb;
 import org.jsondoc.core.util.JSONDocUtils;
-import org.jsondoc.springmvc.StringUtils;
+import org.jsondoc.core.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -53,14 +53,19 @@ public class SpringMvcRequestMappingHandler implements ApiMethodAnnotationHandle
         List<String> headers = merge(baseMapping.headers(), methodMapping.headers());
         List<ApiHeaderDoc> headerDocs = newArrayList();
         for (String header : headers) {
-            headerDocs.add(new ApiHeaderDoc(header, header));
+            ApiHeaderDoc headerDoc = new ApiHeaderDoc();
+            headerDoc.setName(header);
+            headerDoc.setDescription(header);
+            headerDocs.add(headerDoc);
         }
 
         // Exceptions are not a type on there own, so drop this code here.
         for (Class<?> exception : method.getExceptionTypes()) {
             if (exception.isAnnotationPresent(ResponseStatus.class)) {
                 ResponseStatus status = exception.getAnnotation(ResponseStatus.class);
-                ApiErrorDoc errorDoc = new ApiErrorDoc(String.valueOf(status.value().value()), status.reason());
+                ApiErrorDoc errorDoc = new ApiErrorDoc();
+                errorDoc.setCode(String.valueOf(status.value().value()));
+                errorDoc.setDescription(status.reason());
                 doc.getApierrors().add(errorDoc);
             }
         }
