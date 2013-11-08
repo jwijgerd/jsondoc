@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * @author Daniel Ostermeier
  */
-public class SpringMvcRequestBody implements ApiMethodAnnotationHandler {
+public class SpringMvcRequestBodyHandler implements ApiMethodAnnotationHandler {
 
     @Override
     public boolean canHandle(AnnotatedElement candidate, Annotation annotation) {
