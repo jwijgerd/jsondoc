@@ -8,40 +8,42 @@ import java.util.Set;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jsondoc.core.annotation.Api;
 import org.jsondoc.core.annotation.ApiObject;
+import org.jsondoc.core.pluggable.JsonDocGenerator;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiObjectPropertyDoc;
 import org.jsondoc.core.pojo.JSONDoc;
-import org.jsondoc.core.util.JSONDocUtils;
 import org.junit.Test;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 public class JSONDocUtilsTest {
-	private static Reflections reflections = null;
+
 	private String version = "1.0";
 	private String basePath = "http://localhost:8080/api";
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
 	public void testGetApi() throws Exception {
-		reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsondoc.core")));
-		Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Api.class);
-		
-		JSONDoc apiDoc = new JSONDoc(version, basePath);
-		apiDoc.setApis(JSONDocUtils.createApiDocs(classes));
-		
-		classes = reflections.getTypesAnnotatedWith(ApiObject.class);
-		apiDoc.setObjects(JSONDocUtils.createApiObjectDocs(classes));
-		
+        Reflections reflections = new Reflections(
+                new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsondoc.core"))
+        );
+		Set<Class<?>> relevantTypes = reflections.getTypesAnnotatedWith(Api.class);
+        relevantTypes.addAll(reflections.getTypesAnnotatedWith(ApiObject.class));
+
+        JsonDocGenerator generator = new JsonDocGenerator();
+		JSONDoc apiDoc = generator.createJsonDoc(version, basePath, relevantTypes);
+
     	System.out.println(objectMapper.writeValueAsString(apiDoc));
 	}
 
     @Test
     public void testApiVersionAnnotations() {
-        ApiObjectDoc object = JSONDocUtils.createApiObjectDoc(VersionedObject.class);
+        JsonDocGenerator generator = new JsonDocGenerator();
+
+        ApiObjectDoc object = generator.createObjectDoc(VersionedObject.class);
         assertThat(object.getName(), is("versioned object"));
         assertThat(object.getVersion().getSince(), is(2));
 
@@ -49,7 +51,7 @@ public class JSONDocUtilsTest {
         assertThat(field.getName(), is("field"));
         assertThat(field.getVersion().getSince(), is(5));
 
-        ApiDoc api = JSONDocUtils.createApiDoc(VersionedApi.class);
+        ApiDoc api = generator.createApiDoc(VersionedApi.class);
         assertThat(api.getName(), is("versioned api"));
         assertThat(api.getDescription(), is("versioned"));
         assertThat(api.getVersion().getSince(), is(1));

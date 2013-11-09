@@ -668,6 +668,8 @@
                            });
                        });
 
+                       $("#content").hide();
+                       $("#testContent").hide();
                    },
                    error: function(msg) {
                        alert("Error " + msg);

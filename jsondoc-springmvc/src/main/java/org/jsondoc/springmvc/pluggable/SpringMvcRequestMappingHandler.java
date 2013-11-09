@@ -13,7 +13,6 @@ import org.jsondoc.core.pojo.ApiErrorDoc;
 import org.jsondoc.core.pojo.ApiHeaderDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
 import org.jsondoc.core.pojo.ApiVerb;
-import org.jsondoc.core.util.JSONDocUtils;
 import org.jsondoc.core.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,12 +38,8 @@ public class SpringMvcRequestMappingHandler implements ApiMethodAnnotationHandle
 
         doc.setPath(readPath(baseMapping, methodMapping));
         doc.setDescription(StringUtils.splitCamelCase(method.getName()));
-        doc.setVersion(JSONDocUtils.createApiVersionDoc(method));
 
         List<RequestMethod> methods = merge(baseMapping.method(), methodMapping.method());
-        if (methods.size() != 1) {
-            // TODO: do we need to handle multiple 'methods' defined for a single method?
-        }
         doc.setVerb(ApiVerb.valueOf(methods.get(0).name()));
 
         doc.setConsumes(merge(baseMapping.consumes(), methodMapping.consumes()));

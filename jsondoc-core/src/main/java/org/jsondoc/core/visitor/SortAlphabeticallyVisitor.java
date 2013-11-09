@@ -1,12 +1,8 @@
 package org.jsondoc.core.visitor;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
 
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
@@ -19,23 +15,24 @@ import org.jsondoc.core.pojo.JSONDoc;
  */
 public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
 
+    private static final Collator COLLATOR = Collator.getInstance();
+
+    private static final Comparator<ApiDoc> API_COMPARATOR = new ApiNameComparator();
+    private static final Comparator<ApiMethodDoc> METHOD_COMPARATOR = new ApiMethodComparator();
+    private static final Comparator<ApiObjectDoc> OBJECT_COMPARATOR = new ApiObjectComparator();
+    private static final Comparator<ApiObjectPropertyDoc> PROPERTY_COMPARATOR = new ApiObjectPropertyComparator();
+
     @Override
     public Void visit(JSONDoc doc) {
 
         // Sort the APIs.
-        List<ApiDoc> apis = newArrayList(doc.getApis());
-        Collections.sort(apis, new ApiNameComparator());
-        doc.setApis(new TreeSet<ApiDoc>(apis));
+        Collections.sort(doc.getApis(), API_COMPARATOR);
+        Collections.sort(doc.getObjects(), OBJECT_COMPARATOR);
 
-        // Sort the objects.
-        List<ApiObjectDoc> objects = newArrayList(doc.getObjects());
-        Collections.sort(objects, new ApiObjectComparator());
-        doc.setObjects(new TreeSet<ApiObjectDoc>(objects));
-
-        for (ApiDoc api : apis) {
+        for (ApiDoc api : doc.getApis()) {
             api.accept(this);
         }
-        for (ApiObjectDoc object : objects) {
+        for (ApiObjectDoc object : doc.getObjects()) {
             object.accept(this);
         }
         return null;
@@ -43,33 +40,27 @@ public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
 
     @Override
     public Void visit(ApiDoc api) {
-        List<ApiMethodDoc> methods = api.getMethods();
-        Collections.sort(methods, new ApiMethodComparator());
+        Collections.sort(api.getMethods(), METHOD_COMPARATOR);
         return null;
     }
 
     @Override
     public Void visit(ApiObjectDoc object) {
-        List<ApiObjectPropertyDoc> fields = object.getFields();
-        Collections.sort(fields, new ApiObjectFieldComparator());
+        Collections.sort(object.getFields(), PROPERTY_COMPARATOR);
         return null;
     }
 
     private static final class ApiNameComparator implements Comparator<ApiDoc> {
-        private final Collator collator = Collator.getInstance();
-
         @Override
         public int compare(ApiDoc o1, ApiDoc o2) {
-            return collator.compare(o1.getName(), o2.getName());
+            return COLLATOR.compare(o1.getName(), o2.getName());
         }
     }
 
     private static final class ApiMethodComparator implements Comparator<ApiMethodDoc> {
-        private final Collator collator = Collator.getInstance();
-
         @Override
         public int compare(ApiMethodDoc methodA, ApiMethodDoc methodB) {
-            int comparison = collator.compare(methodA.getPath(), methodB.getPath());
+            int comparison = COLLATOR.compare(methodA.getPath(), methodB.getPath());
             if (comparison != 0) {
                 return comparison;
             }
@@ -78,21 +69,17 @@ public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
         }
     }
 
-    private static final class ApiObjectFieldComparator implements Comparator<ApiObjectPropertyDoc> {
-        private final Collator collator = Collator.getInstance();
-
+    private static final class ApiObjectPropertyComparator implements Comparator<ApiObjectPropertyDoc> {
         @Override
         public int compare(ApiObjectPropertyDoc o1, ApiObjectPropertyDoc o2) {
-            return collator.compare(o1.getName(), o2.getName());
+            return COLLATOR.compare(o1.getName(), o2.getName());
         }
     }
 
     private static final class ApiObjectComparator implements Comparator<ApiObjectDoc> {
-        private final Collator collator = Collator.getInstance();
-
         @Override
         public int compare(ApiObjectDoc o1, ApiObjectDoc o2) {
-            return collator.compare(o1.getName(), o2.getName());
+            return COLLATOR.compare(o1.getName(), o2.getName());
         }
     }
 

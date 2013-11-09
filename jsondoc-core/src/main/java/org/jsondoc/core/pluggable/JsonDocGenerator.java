@@ -2,7 +2,6 @@ package org.jsondoc.core.pluggable;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Sets.newHashSet;
 import static org.jsondoc.core.util.Parameter.parametersFrom;
 
 import java.lang.annotation.Annotation;
@@ -88,16 +87,16 @@ public class JsonDocGenerator {
 
     public JSONDoc createJsonDoc(String version, String basePath, Iterable<Class<?>> classes) {
         JSONDoc jsonDoc = new JSONDoc(version, basePath);
-        jsonDoc.setApis(newHashSet(createApiDocs(classes)));
-        jsonDoc.setObjects(newHashSet(createObjectDocs(classes)));
+        jsonDoc.setApis(createApiDocs(classes));
+        jsonDoc.setObjects(createObjectDocs(classes));
         return jsonDoc;
     }
 
-    public Iterable<ApiDoc> createApiDocs(Class<?> clazz, Class<?>... otherClasses) {
+    public List<ApiDoc> createApiDocs(Class<?> clazz, Class<?>... otherClasses) {
         return createApiDocs(Lists.asList(clazz, otherClasses));
     }
 
-    public Iterable<ApiDoc> createApiDocs(Iterable<Class<?>> classes) {
+    public List<ApiDoc> createApiDocs(Iterable<Class<?>> classes) {
         List<ApiDoc> apiDocs = newArrayList();
         for (Class<?> clazz : classes) {
             ApiDoc apiDoc = createApiDoc(clazz);
@@ -143,11 +142,11 @@ public class JsonDocGenerator {
         return apiDoc;
     }
 
-    public Iterable<ApiObjectDoc> createObjectDocs(Class<?> clazz, Class<?>... otherClasses) {
+    public List<ApiObjectDoc> createObjectDocs(Class<?> clazz, Class<?>... otherClasses) {
         return createObjectDocs(Lists.asList(clazz, otherClasses));
     }
 
-    public Iterable<ApiObjectDoc> createObjectDocs(Iterable<Class<?>> classes) {
+    public List<ApiObjectDoc> createObjectDocs(Iterable<Class<?>> classes) {
         List<ApiObjectDoc> apiDocs = newArrayList();
         for (Class<?> clazz : classes) {
             ApiObjectDoc objectDoc = createObjectDoc(clazz);

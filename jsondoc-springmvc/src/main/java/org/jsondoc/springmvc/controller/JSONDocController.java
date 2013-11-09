@@ -1,12 +1,12 @@
 package org.jsondoc.springmvc.controller;
 
-import static org.jsondoc.core.util.JSONDocUtils.createApiDocs;
-import static org.jsondoc.core.util.JSONDocUtils.createApiObjectDocs;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 
 import org.jsondoc.core.annotation.Api;
 import org.jsondoc.core.annotation.ApiObject;
+import org.jsondoc.core.pluggable.JsonDocGenerator;
 import org.jsondoc.core.pojo.JSONDoc;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
@@ -38,9 +38,11 @@ public class JSONDocController {
     @ResponseBody
 	public JSONDoc getApi() {
         Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forWebInfClasses(servletContext)));
-        JSONDoc apiDoc = new JSONDoc(version, basePath);
-        apiDoc.setApis(createApiDocs(reflections.getTypesAnnotatedWith(Api.class)));
-        apiDoc.setObjects(createApiObjectDocs(reflections.getTypesAnnotatedWith(ApiObject.class)));
-        return apiDoc;
+
+        Set<Class<?>> relevantTypes = reflections.getTypesAnnotatedWith(Api.class);
+        relevantTypes.addAll(reflections.getTypesAnnotatedWith(ApiObject.class));
+
+        JsonDocGenerator generator = new JsonDocGenerator();
+        return generator.createJsonDoc(version, basePath, relevantTypes);
 	}
 }

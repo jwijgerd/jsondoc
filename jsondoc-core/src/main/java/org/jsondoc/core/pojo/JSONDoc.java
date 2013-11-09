@@ -1,7 +1,7 @@
 package org.jsondoc.core.pojo;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsondoc.core.visitor.Visitable;
 import org.jsondoc.core.visitor.Visitor;
@@ -11,8 +11,8 @@ public final class JSONDoc implements Visitable {
 	private String version;
 	private String basePath;
 
-    private Set<ApiDoc> apis = new TreeSet<ApiDoc>();
-	private Set<ApiObjectDoc> objects = new TreeSet<ApiObjectDoc>();
+    private List<ApiDoc> apis = new ArrayList<ApiDoc>();
+	private List<ApiObjectDoc> objects = new ArrayList<ApiObjectDoc>();
 
 	public JSONDoc(String version, String basePath) {
 		this.version = version;
@@ -27,19 +27,19 @@ public final class JSONDoc implements Visitable {
 		this.version = version;
 	}
 
-	public Set<ApiDoc> getApis() {
+	public List<ApiDoc> getApis() {
 		return apis;
 	}
 
-	public void setApis(Set<ApiDoc> apis) {
+	public void setApis(List<ApiDoc> apis) {
 		this.apis = apis;
 	}
 
-	public Set<ApiObjectDoc> getObjects() {
+	public List<ApiObjectDoc> getObjects() {
 		return objects;
 	}
 
-	public void setObjects(Set<ApiObjectDoc> objects) {
+	public void setObjects(List<ApiObjectDoc> objects) {
 		this.objects = objects;
 	}
 

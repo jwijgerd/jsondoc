@@ -2,7 +2,6 @@ package org.jsondoc.core.visitor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
@@ -28,7 +27,7 @@ public class FilterByVersionVisitor extends AbstractDocVisitor<Void> {
     @Override
     public Void visit(JSONDoc doc) {
 
-        Set<ApiDoc> apis = doc.getApis();
+        List<ApiDoc> apis = doc.getApis();
         for (ApiDoc api : new ArrayList<ApiDoc>(apis)) {
             if (acceptVersion(api.getVersion(), version)) {
                 api.accept(this);
@@ -37,7 +36,7 @@ public class FilterByVersionVisitor extends AbstractDocVisitor<Void> {
             }
         }
 
-        Set<ApiObjectDoc> objects = doc.getObjects();
+        List<ApiObjectDoc> objects = doc.getObjects();
         for (ApiObjectDoc object : new ArrayList<ApiObjectDoc>(objects)) {
             if (acceptVersion(object.getVersion(), version)) {
                 object.accept(this);
