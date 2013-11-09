@@ -8,11 +8,20 @@ import org.jsondoc.core.visitor.Visitor;
 public final class ApiErrorDoc implements Visitable {
 
     private final String jsondocId = UUID.randomUUID().toString();
+    private String status;
     private String code;
     private String description;
 
     public String getJsondocId() {
         return jsondocId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getCode() {

@@ -9,6 +9,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsondoc.core.annotation.ApiObjectProperty;
 import org.jsondoc.core.pluggable.ApiObjectAnnotationHandler;
@@ -19,6 +21,7 @@ import org.jsondoc.core.pojo.ApiObjectPropertyDoc;
  * @author Daniel Ostermeier
  */
 public class JsonDocApiPropertyHandler implements ApiObjectAnnotationHandler {
+
     @Override
     public boolean canHandle(AnnotatedElement candidate, Annotation annotation) {
         return annotation instanceof ApiObjectProperty;
@@ -68,32 +71,43 @@ public class JsonDocApiPropertyHandler implements ApiObjectAnnotationHandler {
         applyContentToDoc(propertyDoc, annotation, typeChecks, method.getReturnType());
     }
 
-    private void applyContentToDoc(ApiObjectPropertyDoc fieldDoc, ApiObjectProperty annotation, String[] typeChecks, Class<?> type) {
+    private void applyContentToDoc(ApiObjectPropertyDoc doc, ApiObjectProperty annotation, String[] typeChecks, Class<?> type) {
         if (hasText(annotation.name())) {
-            fieldDoc.setName(annotation.name());
+            doc.setName(annotation.name());
         }
         if (hasText(annotation.description())) {
-            fieldDoc.setDescription(annotation.description());
+            doc.setDescription(annotation.description());
         }
-        if (!hasText(fieldDoc.getType())) {
-            fieldDoc.setType(typeChecks[0]);
+        if (!hasText(doc.getType())) {
+            doc.setType(typeChecks[0]);
         }
-        if (!hasText(fieldDoc.getMultiple())) {
-            fieldDoc.setMultiple(String.valueOf(isMultiple(type)));
+        if (!hasText(doc.getMultiple())) {
+            doc.setMultiple(String.valueOf(isMultiple(type)));
         }
-        if (!hasText(fieldDoc.getFormat())) {
-            fieldDoc.setFormat(annotation.format());
+        if (!hasText(doc.getFormat())) {
+            doc.setFormat(annotation.format());
         }
-        if (!hasText(fieldDoc.getMapKeyObject())) {
-            fieldDoc.setMapKeyObject(typeChecks[1]);
+        if (!hasText(doc.getMapKeyObject())) {
+            doc.setMapKeyObject(typeChecks[1]);
         }
-        if (!hasText(fieldDoc.getMapValueObject())) {
-            fieldDoc.setMapValueObject(typeChecks[2]);
+        if (!hasText(doc.getMapValueObject())) {
+            doc.setMapValueObject(typeChecks[2]);
         }
-        if (!hasText(fieldDoc.getMap())) {
-            fieldDoc.setMap(typeChecks[3]);
+        if (!hasText(doc.getMap())) {
+            doc.setMap(typeChecks[3]);
         }
-        fieldDoc.addAllowedvalues(annotation.allowedvalues());
+        if (annotation.allowedvalues().length > 0) {
+            doc.addAllowedvalues(annotation.allowedvalues());
+        } else {
+            if (type.isEnum()) {
+                List<String> allowedValues = new ArrayList<String>();
+                Object[] enumValues = type.getEnumConstants();
+                for (Object enumValue : enumValues) {
+                    allowedValues.add(enumValue.toString());
+                }
+                doc.setAllowedvalues(allowedValues);
+            }
+        }
     }
 
 }

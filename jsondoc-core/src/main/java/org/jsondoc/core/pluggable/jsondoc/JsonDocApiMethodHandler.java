@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
 import org.jsondoc.core.pojo.ApiMethodDoc;
+import org.jsondoc.core.pojo.ApiStatus;
 import org.jsondoc.core.pojo.ApiVerb;
 
 /**
@@ -32,6 +33,9 @@ public class JsonDocApiMethodHandler implements ApiMethodAnnotationHandler {
         }
         if (annotation.verb() != ApiVerb.UNDEFINED) {
             doc.setVerb(annotation.verb());
+        }
+        if (annotation.status() != ApiStatus.UNDEFINED) {
+            doc.setStatus(annotation.status());
         }
         doc.addConsumes(annotation.consumes());
         doc.addProduces(annotation.produces());

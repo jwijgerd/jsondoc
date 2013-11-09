@@ -15,6 +15,7 @@ public final class ApiDoc implements Comparable<ApiDoc>, Visitable {
 
     private String name;
     private String description;
+    private ApiStatus status;
     private ApiVersionDoc version;
     private List<ApiMethodDoc> methods = new ArrayList<ApiMethodDoc>();
 
@@ -74,5 +75,13 @@ public final class ApiDoc implements Comparable<ApiDoc>, Visitable {
 
     public boolean isValid() {
         return hasText(name);
+    }
+
+    public ApiStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ApiStatus status) {
+        this.status = status;
     }
 }

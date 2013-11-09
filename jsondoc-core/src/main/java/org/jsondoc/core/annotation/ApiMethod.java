@@ -2,12 +2,12 @@ package org.jsondoc.core.annotation;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.jsondoc.core.pojo.ApiVerb.UNDEFINED;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.jsondoc.core.pojo.ApiStatus;
 import org.jsondoc.core.pojo.ApiVerb;
 
 /**
@@ -37,7 +37,7 @@ public @interface ApiMethod {
 	 * @see ApiVerb
 	 * @return
 	 */
-	ApiVerb verb() default UNDEFINED;
+	ApiVerb verb() default ApiVerb.UNDEFINED;
 	
 	/**
 	 * An array of strings representing media types produced by the method, like application/json, application/xml, ...
@@ -50,5 +50,7 @@ public @interface ApiMethod {
 	 * @return
 	 */
 	String[] consumes() default {};
-	
+
+    ApiStatus status() default ApiStatus.UNDEFINED;
+
 }

@@ -2,10 +2,13 @@ package org.jsondoc.core.annotation;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.jsondoc.core.pojo.ApiStatus.UNDEFINED;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import org.jsondoc.core.pojo.ApiStatus;
 
 /**
  * This annotation is to be used on your "service" class, for example controller classes in Spring MVC.
@@ -18,14 +21,20 @@ import java.lang.annotation.Target;
 public @interface Api {
 
     /**
-     * The name of the API.
-     * @return
+     * Specify the name of the API. If not specified, it will be inferred from the type
+     * being annotated.
+     *
+     * @return the name of the API.
      */
     String name() default "";
 
 	/**
-	 * A description of what the API does.
-	 * @return
+     * Specify a description of the API.  If not specified, it will be inferred from the
+     * type being annotated.
+     *
+	 * @return a description of what the API does.
 	 */
 	String description() default "";
+
+    ApiStatus status() default UNDEFINED;
 }

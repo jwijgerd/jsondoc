@@ -16,13 +16,13 @@ public final class ApiObjectPropertyDoc implements Visitable {
     private String name;
     private String description;
     private ApiVersionDoc version;
-    private List<String> allowedvalues = new ArrayList<String>();
     private String type;
     private String multiple;
     private String format;
     private String mapKeyObject;
     private String mapValueObject;
     private String map;
+    private List<String> allowedvalues = new ArrayList<String>();
 
     public void setActualName(String actualName) {
         this.actualName = actualName;

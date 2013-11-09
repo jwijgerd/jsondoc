@@ -4,6 +4,8 @@ import static org.jsondoc.core.util.StringUtils.hasText;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsondoc.core.annotation.ApiParam;
 import org.jsondoc.core.pluggable.ApiParamAnnotationHandler;
@@ -45,7 +47,19 @@ public class JsonDocApiParamHandler implements ApiParamAnnotationHandler {
         if (annotation.paramType() != ApiParamType.UNDEFINED) {
             doc.setParamType(annotation.paramType());
         }
-        doc.addAllowedvalues(annotation.allowedvalues());
+        if (annotation.allowedvalues().length > 0) {
+            doc.addAllowedvalues(annotation.allowedvalues());
+        } else {
+            // if we have an enum, then enumerate and set allowed values.
+            if (parameter.getParameterType().isEnum()) {
+                List<String> allowedValues = new ArrayList<String>();
+                Object[] enumValues = parameter.getParameterType().getEnumConstants();
+                for (Object enumValue : enumValues) {
+                    allowedValues.add(enumValue.toString());
+                }
+                doc.setAllowedvalues(allowedValues);
+            }
+        }
         doc.setRequired(String.valueOf(annotation.required()));
     }
 }

@@ -13,8 +13,10 @@ public class Child extends Parent {
 	
 	@ApiObjectProperty(description="the test games")
 	private Long[] games;
-	
-	@ApiObjectProperty(description="the scores for each game")
-	private Map<String, Integer> scores;
 
+    @ApiObjectProperty(description="the scores for each game")
+    private Map<String, Integer> scores;
+
+    @ApiObjectProperty(description="the scores for each game")
+    private SampleEnum sample;
 }

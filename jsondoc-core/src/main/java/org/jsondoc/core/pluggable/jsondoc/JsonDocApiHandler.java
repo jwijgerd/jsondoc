@@ -8,6 +8,7 @@ import java.lang.reflect.AnnotatedElement;
 import org.jsondoc.core.annotation.Api;
 import org.jsondoc.core.pluggable.ApiAnnotationHandler;
 import org.jsondoc.core.pojo.ApiDoc;
+import org.jsondoc.core.pojo.ApiStatus;
 
 /**
  * @author Daniel Ostermeier
@@ -27,6 +28,9 @@ public class JsonDocApiHandler implements ApiAnnotationHandler {
         }
         if (hasText(annotation.description())) {
             doc.setDescription(annotation.description());
+        }
+        if (annotation.status() != ApiStatus.UNDEFINED) {
+            doc.setStatus(annotation.status());
         }
     }
 }

@@ -34,6 +34,9 @@ public class JsonDocApiErrorHandler implements ApiMethodAnnotationHandler {
             if (hasText(errorAnnotation.description())) {
                 errorDoc.setDescription(errorAnnotation.description());
             }
+            if (hasText(errorAnnotation.status())) {
+                errorDoc.setStatus(errorAnnotation.status());
+            }
         }
     }
 }
