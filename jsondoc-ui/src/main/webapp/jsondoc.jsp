@@ -168,6 +168,12 @@
             <div class="accordion-body collapse" id="_{{jsondocId}}">
                 <div class="accordion-inner">
                     <table class="table table-condensed table-striped table-bordered">
+                        {{#if status}}
+                        <tr>
+                            <th>Status</th>
+                            <td><span>{{status}}</span></td>
+                        </tr>
+                        {{/if}}
                         <tr>
                             <th style="width:15%;">Path</th>
                             <td><code>{{path}}</code></td>

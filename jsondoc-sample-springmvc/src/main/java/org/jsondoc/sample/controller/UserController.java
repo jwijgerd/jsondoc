@@ -10,6 +10,7 @@ import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
 import org.jsondoc.core.pojo.ApiParamType;
+import org.jsondoc.core.pojo.ApiStatus;
 import org.jsondoc.core.pojo.ApiVerb;
 import org.jsondoc.sample.pojo.User;
 import org.springframework.http.MediaType;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/users")
 public class UserController {
 
-	@ApiMethod(path = "/users/{id}", verb = ApiVerb.GET, description = "Gets a user with the given ID", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ApiMethod(path = "/users/{id}", status = ApiStatus.PROPOSED, verb = ApiVerb.GET, description = "Gets a user with the given ID", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ApiErrors(apierrors = { @ApiError(code = "3000", description = "User not found"), @ApiError(code = "9000", description = "Illegal argument") })
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public @ResponseBody @ApiResponseObject
@@ -33,7 +34,7 @@ public class UserController {
 		return new User(id, "jsondoc-user", 30, "M");
 	}
 
-	@ApiMethod(path = "/users/{gender}/{age}", verb = ApiVerb.GET, description = "Gets users with the given gender and age", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ApiMethod(path = "/users/{gender}/{age}", status = ApiStatus.UNDER_DEVELOPMENT, verb = ApiVerb.GET, description = "Gets users with the given gender and age", produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ApiErrors(apierrors = { @ApiError(code = "3000", description = "User not found"), @ApiError(code = "9000", description = "Illegal argument") })
 	@RequestMapping(value = "/{gender}/{age}", method = RequestMethod.GET)
 	public @ResponseBody @ApiResponseObject
@@ -44,7 +45,7 @@ public class UserController {
 		return users;
 	}
 
-    @ApiMethod(path = "/users/q/{name}/{gender}?agemin={agemin}&agemax={agemax}", verb = ApiVerb.GET, description = "Gets a user with the given gender and given age", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @ApiMethod(path = "/users/q/{name}/{gender}?agemin={agemin}&agemax={agemax}", status = ApiStatus.RELEASED, verb = ApiVerb.GET, description = "Gets a user with the given gender and given age", produces = { MediaType.APPLICATION_JSON_VALUE })
     @ApiErrors(apierrors = { @ApiError(code = "3000", description = "User not found"), @ApiError(code = "9000", description = "Illegal argument") })
     @RequestMapping(value = "/q/{name}/{gender}", method = RequestMethod.GET)
     public @ResponseBody @ApiResponseObject
