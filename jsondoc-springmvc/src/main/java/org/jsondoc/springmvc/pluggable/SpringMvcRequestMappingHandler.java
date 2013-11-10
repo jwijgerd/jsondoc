@@ -70,11 +70,16 @@ public class SpringMvcRequestMappingHandler implements ApiMethodAnnotationHandle
     }
 
     private static String readPath(RequestMapping baseMapping, RequestMapping methodMapping) {
+        return readPath(baseMapping) + readPath(methodMapping);
+    }
+
+    private static String readPath(RequestMapping mapping) {
         String path = "";
-        if (baseMapping.value().length > 0) {
-            path = baseMapping.value()[0];
+        if (mapping != null) {
+            if (mapping.value().length > 0) {
+                path += mapping.value()[0];
+            }
         }
-        path += methodMapping.value()[0];
         return path;
     }
 }
