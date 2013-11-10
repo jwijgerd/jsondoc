@@ -1,11 +1,12 @@
 package org.jsondoc.springmvc.pluggable;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.jsondoc.core.util.ListUtils.merge;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jsondoc.core.pluggable.ApiMethodAnnotationHandler;
@@ -39,13 +40,28 @@ public class SpringMvcRequestMappingHandler implements ApiMethodAnnotationHandle
         doc.setPath(readPath(baseMapping, methodMapping));
         doc.setDescription(StringUtils.splitCamelCase(method.getName()));
 
-        List<RequestMethod> methods = merge(baseMapping.method(), methodMapping.method());
+        List<RequestMethod> methods = new ArrayList<RequestMethod>();
+        List<String> headers = new ArrayList<String>();
+
+        if (baseMapping != null) {
+            methods.addAll(Arrays.asList(baseMapping.method()));
+            headers.addAll(Arrays.asList(baseMapping.headers()));
+        }
+        if (methodMapping != null) {
+            methods.addAll(Arrays.asList(methodMapping.method()));
+            headers.addAll(Arrays.asList(methodMapping.headers()));
+        }
         doc.setVerb(ApiVerb.valueOf(methods.get(0).name()));
 
-        doc.setConsumes(merge(baseMapping.consumes(), methodMapping.consumes()));
-        doc.setProduces(merge(baseMapping.produces(), methodMapping.produces()));
+        if (baseMapping != null) {
+            doc.addConsumes(baseMapping.consumes());
+            doc.addProduces(baseMapping.produces());
+        }
+        if (methodMapping != null) {
+            doc.addConsumes(methodMapping.consumes());
+            doc.addProduces(methodMapping.produces());
+        }
 
-        List<String> headers = merge(baseMapping.headers(), methodMapping.headers());
         List<ApiHeaderDoc> headerDocs = newArrayList();
         for (String header : headers) {
             ApiHeaderDoc headerDoc = new ApiHeaderDoc();
