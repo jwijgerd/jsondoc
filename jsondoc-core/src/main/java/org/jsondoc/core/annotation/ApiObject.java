@@ -36,5 +36,12 @@ public @interface ApiObject {
 	 * @return
 	 */
 	boolean show() default true;
-	
+
+    /**
+     * A category provides an arbitrary grouping identifier, allowing the UI to group objects
+     * from the same category together in the UI.
+     *
+     * @return
+     */
+    String category() default "";
 }

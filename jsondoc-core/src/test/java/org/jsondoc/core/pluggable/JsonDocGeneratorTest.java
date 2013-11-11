@@ -7,6 +7,7 @@ import org.jsondoc.core.Test3Controller;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.visitor.VersionedController;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -14,10 +15,15 @@ import org.junit.Test;
  */
 public class JsonDocGeneratorTest {
 
+    private JsonDocGenerator generator;
+
+    @Before
+    public void setUp() {
+        generator = new JsonDocGenerator();
+    }
+
     @Test
     public void testSomething() {
-        JsonDocGenerator generator = new JsonDocGenerator();
-
         ApiDoc apiA = generator.createApiDoc(Test1Controller.class);
         apiA.getName();
 

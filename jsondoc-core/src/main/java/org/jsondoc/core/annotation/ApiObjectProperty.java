@@ -21,11 +21,17 @@ public @interface ApiObjectProperty {
     String name() default "";
 
 	/**
-	 * A drescription of what the field is
+	 * A description of what the field is
 	 * @return
 	 */
 	String description() default "";
-	
+
+    /**
+     * The fields type. This can be used to override the inspected type.
+     * @return
+     */
+    String type() default "";
+
 	/**
 	 * The format pattern for this field
 	 * @return

@@ -14,7 +14,9 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
 
     private String name;
     private String description;
+    private String category;
     private ApiVersionDoc version;
+
     private List<ApiObjectPropertyDoc> fields = new ArrayList<ApiObjectPropertyDoc>();
 
     public String getJsondocId() {
@@ -74,5 +76,13 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
 
     public boolean isValid() {
         return StringUtils.hasText(name);
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

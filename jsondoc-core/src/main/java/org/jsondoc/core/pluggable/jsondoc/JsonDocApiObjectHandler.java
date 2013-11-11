@@ -22,8 +22,15 @@ public class JsonDocApiObjectHandler implements ApiObjectAnnotationHandler {
     @Override
     public void handle(AnnotatedElement element, ApiObjectDoc doc) {
         ApiObject annotation = element.getAnnotation(ApiObject.class);
+        Class<?> clazz = (Class<?>)element;
         if (hasText(annotation.name())) {
             doc.setName(annotation.name());
+        }
+        if (!hasText(doc.getName())) {
+            doc.setName(clazz.getSimpleName());
+        }
+        if (hasText(annotation.category())) {
+            doc.setCategory(annotation.category());
         }
         if (hasText(annotation.description())) {
             doc.setDescription(annotation.description());

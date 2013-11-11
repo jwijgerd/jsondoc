@@ -164,14 +164,14 @@ public class JsonDocGenerator {
 
         // Process class level annotations.
         applyApiObjectHandlers(clazz, apiObjectDoc);
-        if (apiObjectDoc.isValid()) {
-            for (Field field : clazz.getDeclaredFields()) {
-                applyApiObjectHandlers(field, apiObjectDoc);
-            }
-            for (Method method : clazz.getDeclaredMethods()) {
-                applyApiObjectHandlers(method, apiObjectDoc);
-            }
+
+        for (Field field : clazz.getDeclaredFields()) {
+            applyApiObjectHandlers(field, apiObjectDoc);
         }
+        for (Method method : clazz.getDeclaredMethods()) {
+            applyApiObjectHandlers(method, apiObjectDoc);
+        }
+
         return apiObjectDoc;
     }
 

@@ -1,6 +1,7 @@
 package org.jsondoc.core.pluggable.jsondoc;
 
 import static org.jsondoc.core.util.JSONDocSupport.getFieldObject;
+import static org.jsondoc.core.util.JSONDocSupport.getParamObjects;
 import static org.jsondoc.core.util.JSONDocSupport.getReturnObject;
 import static org.jsondoc.core.util.JSONDocSupport.isMultiple;
 import static org.jsondoc.core.util.StringUtils.hasText;
@@ -8,6 +9,7 @@ import static org.jsondoc.core.util.StringUtils.hasText;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,14 +52,14 @@ public class JsonDocApiPropertyHandler implements ApiObjectAnnotationHandler {
         }
 
         String[] typeChecks = getFieldObject(field);
-        applyContentToDoc(propertyDoc, annotation, typeChecks, field.getType());
+        applyAnnotation(propertyDoc, annotation, typeChecks, field.getType());
     }
 
     private void handle(Method method, ApiObjectDoc apiObject) {
 
         ApiObjectProperty annotation = method.getAnnotation(ApiObjectProperty.class);
 
-        String propertyName = null;
+        String propertyName = getPropertyName(method);
 
         ApiObjectPropertyDoc propertyDoc = apiObject.getField(propertyName);
         if (propertyDoc == null) {
@@ -67,11 +69,34 @@ public class JsonDocApiPropertyHandler implements ApiObjectAnnotationHandler {
             apiObject.getFields().add(propertyDoc);
         }
 
-        String[] typeChecks = getReturnObject(method);
-        applyContentToDoc(propertyDoc, annotation, typeChecks, method.getReturnType());
+        String[] typeChecks;
+        Class<?> type;
+        if (method.getReturnType() != Void.TYPE) {
+            typeChecks = getReturnObject(method);
+            type = method.getReturnType();
+        } else {
+            typeChecks = getParamObjects(method, 0);
+            type = method.getParameterTypes()[0];
+        }
+        applyAnnotation(propertyDoc, annotation, typeChecks, type);
     }
 
-    private void applyContentToDoc(ApiObjectPropertyDoc doc, ApiObjectProperty annotation, String[] typeChecks, Class<?> type) {
+    private String getPropertyName(Member member) {
+        String propertyName;
+        if (member.getName().startsWith("get")) {
+            propertyName = member.getName().substring(3);
+        } else if (member.getName().startsWith("set")) {
+            propertyName = member.getName().substring(3);
+        } else if (member.getName().startsWith("is")) {
+            propertyName = member.getName().substring(2);
+        } else {
+            propertyName = member.getName();
+        }
+        propertyName = propertyName.substring(0, 1).toLowerCase() + propertyName.substring(1);
+        return propertyName;
+    }
+
+    private void applyAnnotation(ApiObjectPropertyDoc doc, ApiObjectProperty annotation, String[] typeChecks, Class<?> type) {
         if (hasText(annotation.name())) {
             doc.setName(annotation.name());
         }
@@ -79,7 +104,11 @@ public class JsonDocApiPropertyHandler implements ApiObjectAnnotationHandler {
             doc.setDescription(annotation.description());
         }
         if (!hasText(doc.getType())) {
-            doc.setType(typeChecks[0]);
+            if (hasText(annotation.type())) {
+                doc.setType(annotation.type());
+            } else {
+                doc.setType(typeChecks[0]);
+            }
         }
         if (!hasText(doc.getMultiple())) {
             doc.setMultiple(String.valueOf(isMultiple(type)));

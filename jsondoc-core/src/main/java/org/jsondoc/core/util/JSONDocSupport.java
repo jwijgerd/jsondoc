@@ -22,11 +22,11 @@ public final class JSONDocSupport {
         return analyse(type, genericType)[0];
     }
 
-    public static String getParamObjects(Method method, Integer index) {
+    public static String[] getParamObjects(Method method, Integer index) {
         Class<?> type = method.getParameterTypes()[index];
         Type genericType = method.getGenericParameterTypes()[index];
 
-        return analyse(type, genericType)[0];
+        return analyse(type, genericType);
     }
 
     public static String[] getBodyObject(Method method, Integer index) {
