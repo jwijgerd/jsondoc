@@ -9,15 +9,15 @@
 <meta name="author" content="">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/handlebars-1.0.0.beta.6.js"></script>
-<script type="text/javascript" src="js/jlinq.js"></script>
-<script type="text/javascript" src="js/prettify.js"></script>
-<script src="js/bootstrap-button.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../js/handlebars-1.0.0.beta.6.js"></script>
+<script type="text/javascript" src="../../js/jlinq.js"></script>
+<script type="text/javascript" src="../../js/prettify.js"></script>
+<script src="../../js/bootstrap-button.js"></script>
 
 <!-- Le styles -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/font-awesome.css" rel="stylesheet" >
+<link href="../../css/bootstrap.min.css" rel="stylesheet">
+<link href="../../css/font-awesome.css" rel="stylesheet" >
 <style type="text/css">
 body {
 	padding-top: 60px;
@@ -84,7 +84,7 @@ ol.linenums li {
   text-shadow: 0 1px 0 #fff;
 }
 </style>
-<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="../../css/bootstrap-responsive.min.css" rel="stylesheet">
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>

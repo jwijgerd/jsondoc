@@ -9,13 +9,13 @@
 <meta name="author" content="">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/prettify.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../js/prettify.js"></script>
 
 
 <!-- Le styles -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/font-awesome.css" rel="stylesheet" >
+<link href="../../css/bootstrap.min.css" rel="stylesheet">
+<link href="../../css/font-awesome.css" rel="stylesheet" >
 <link href="css/prettify.css" rel="stylesheet" />
 <style type="text/css">
 body {
@@ -27,7 +27,7 @@ section {
 	padding-top:60px;
 }
 </style>
-<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="../../css/bootstrap-responsive.min.css" rel="stylesheet">
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
@@ -56,7 +56,7 @@ section {
 				    <li><a href="#downloads">Downloads</a></li>
 				    <li><a href="#appendix">Appendix</a></li>
 				    <li><a href="#contacts">Contacts</a></li>
-				    <li><a href="/jsondoc.jsp" target="blank">Demo</a></li>
+				    <li><a href="jsondoc.jsp" target="blank">Demo</a></li>
 			    </ul>
 			    <ul class="nav pull-right">
 			    	<li><a href="mailto:fabio.maffioletti@gmail.com"><i class="icon-envelope"></i> Email me</a></li>
@@ -67,12 +67,12 @@ section {
 
 	<div class="container">
 		<div class="row">
-			<div class="hero-unit" style="background-image: url('img/crisp_paper_ruffles.png');">
+			<div class="hero-unit" style="background-image: url('../../img/crisp_paper_ruffles.png');">
 				<h1>JSONDoc</h1>
 				<p>Easily generate documentation for your RESTful API</p>
 				<p>
 					<a class="btn btn-large" href="https://github.com/fabiomaffioletti/jsondoc" target="blank"> View project on Github </a>
-					<a class="btn btn-large" href="/jsondoc.jsp" target="blank"> See live demo </a>
+					<a class="btn btn-large" href="jsondoc.jsp" target="blank"> See live demo </a>
 				</p>
 			</div>
 		</div>
@@ -409,7 +409,7 @@ public class JSONDocController {
 			<h1>Step 3: Display the generated documentation!</h1>
 			<h3>With jsondoc-ui</h3>
 			<p>You can include the <strong>jsondoc-ui</strong> project in your web application. This provides an interface to browse the generated
-			documentation, it is built on Twitter Bootstrap and can be easily customized for you needs. Check out the <a href="/jsondoc.jsp" target="blank">live demo here</a>.</p>
+			documentation, it is built on Twitter Bootstrap and can be easily customized for you needs. Check out the <a href="jsondoc.jsp" target="blank">live demo here</a>.</p>
 			<h3>Build your own viewer</h3>
 			<p>If you are not satisfied with the standard interface, you can use the generated JSON documentation in a fully customized interface!</p>
 			</section>
@@ -572,9 +572,9 @@ public class Location {
 			<p>
 			<table class="table table-bordered table-striped">
 				<tr><th>Project</th><th>Description</th></tr>
-				<tr><td><a href="static/jsondoc-core.jar">jsondoc-core</a></td><td>Set of annotations. Download only this if your web application is not using Spring MVC</td></tr>
-				<tr><td><a href="static/jsondoc-springmvc.jar">jsondoc-springmvc</a></td><td>Download this if you want to use the jsondoc controller to automatically generate json documentation. Until jsondoc is not on a public maven repository, you have to download and install also jsondoc-core</td></tr>
-				<tr><td><a href="static/jsondoc-ui.zip">jsondoc-ui</a></td><td>Standard interface to display the generated documentation</td></tr>
+				<tr><td><a href="../../static/jsondoc-core.jar">jsondoc-core</a></td><td>Set of annotations. Download only this if your web application is not using Spring MVC</td></tr>
+				<tr><td><a href="../../static/jsondoc-springmvc.jar">jsondoc-springmvc</a></td><td>Download this if you want to use the jsondoc controller to automatically generate json documentation. Until jsondoc is not on a public maven repository, you have to download and install also jsondoc-core</td></tr>
+				<tr><td><a href="../../static/jsondoc-ui.zip">jsondoc-ui</a></td><td>Standard interface to display the generated documentation</td></tr>
 			</table>
 		</section>
 		
