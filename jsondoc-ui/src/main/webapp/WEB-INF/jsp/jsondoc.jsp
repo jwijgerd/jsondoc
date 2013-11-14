@@ -149,11 +149,11 @@
         {{#eachMapEntries objects}}
         <div class="accordion-group">
             <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{this.key}}">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#_{{this.key}}">
                     {{this.key}}
                 </a>
             </div>
-            <div id="{{this.key}}" class="accordion-body collapse">
+            <div id="_{{this.key}}" class="accordion-body collapse">
                 <div class="accordion-inner">
                     <ul class="nav nav-list">
                     {{#each this.value}}
