@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>jsondoc</artifactId>
 		<groupId>org.jsondoc</groupId>
-		<version>1.0.1.16-SNAPSHOT</version>
+		<version>1.0.1.16</version>
 	</parent>
 	
 	<artifactId>jsondoc-sample-springmvc</artifactId>
