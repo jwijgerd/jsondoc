@@ -1,8 +1,10 @@
 package org.jsondoc.core.visitor;
 
 import java.text.Collator;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 
 import org.jsondoc.core.pojo.ApiDoc;
 import org.jsondoc.core.pojo.ApiMethodDoc;
@@ -15,11 +17,11 @@ import org.jsondoc.core.pojo.JSONDoc;
  */
 public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
 
-    private static final Collator COLLATOR = Collator.getInstance();
+    public static final Collator COLLATOR = Collator.getInstance();
 
     private static final Comparator<ApiDoc> API_COMPARATOR = new ApiNameComparator();
     private static final Comparator<ApiMethodDoc> METHOD_COMPARATOR = new ApiMethodComparator();
-    private static final Comparator<ApiObjectDoc> OBJECT_COMPARATOR = new ApiObjectComparator();
+    public static final Comparator<ApiObjectDoc> OBJECT_COMPARATOR = new ApiObjectComparator();
     private static final Comparator<ApiObjectPropertyDoc> PROPERTY_COMPARATOR = new ApiObjectPropertyComparator();
 
     @Override
@@ -27,14 +29,16 @@ public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
 
         // Sort the APIs.
         Collections.sort(doc.getApis(), API_COMPARATOR);
-        Collections.sort(doc.getObjects(), OBJECT_COMPARATOR);
 
         for (ApiDoc api : doc.getApis()) {
             api.accept(this);
         }
-        for (ApiObjectDoc object : doc.getObjects()) {
-            object.accept(this);
+        for(Map.Entry<String,Collection<ApiObjectDoc>> entry: doc.getObjects().entrySet()) {
+            for (ApiObjectDoc object : entry.getValue()) {
+                object.accept(this);
+            }
         }
+
         return null;
     }
 

@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectProperty;
 
-@ApiObject(name = "location", show = false)
+@ApiObject(name = "location", show = false,category = "Geodata")
 public class Location {
 
 	@ApiObjectProperty(description = "The population of the location")

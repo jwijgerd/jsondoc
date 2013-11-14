@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectProperty;
 
-@ApiObject(name = "city")
+@ApiObject(name = "city",category = "Geodata")
 @XmlRootElement
 public class City extends Location {
 

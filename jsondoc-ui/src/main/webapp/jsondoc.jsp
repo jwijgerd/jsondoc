@@ -144,12 +144,27 @@
 </script>
 
 <script id="objects" type="text/x-handlebars-template">
-    <ul class="nav nav-list">
-        <li class="nav-header">Objects</li>
-        {{#objects}}
-        <li><a href="#" id="{{jsondocId}}" rel="object">{{name}}</a></li>
-        {{/objects}}
-    </ul>
+    <li class="nav-header">Objects</li>
+    <div class="accordion" id="accordion2">
+        {{#eachMapEntries objects}}
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{this.key}}">
+                    {{this.key}}
+                </a>
+            </div>
+            <div id="{{this.key}}" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul class="nav nav-list">
+                    {{#each this.value}}
+                    <li><a class="object" href="#" id="{{jsondocId}}" rel="object">{{name}}</a></li>
+                    {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {{/eachMapEntries}}
+    </div>
 </script>
 
 <script id="methods" type="text/x-handlebars-template">
@@ -507,6 +522,15 @@
 <script>
     var model;
 
+    Handlebars.registerHelper('eachMapEntries', function(context, options) {
+        var ret = "";
+        $.each(context, function(key, value) {
+            var entry = {"key": key, "value": value};
+            ret = ret + options.fn(entry);
+        });
+        return ret;
+    });
+
     function checkURLExistence() {
         var value = $("#jsondocfetch").val();
         if(value.trim() == '') {
@@ -662,9 +686,17 @@
                        $("#objectdiv").html(objectsHTML);
                        $("#objectdiv").show();
 
-                       $("#objectdiv a").each(function() {
+                       $("#objectdiv a[class = object]").each(function() {
                            $(this).click(function() {
-                               var o = jlinq.from(data.objects).equals("jsondocId", this.id).first();
+                               var objects = [];
+                               var count = 0;
+                               for (var key in data.objects) {
+                                   for(var index in data.objects[key]){
+                                       objects[count] = data.objects[key][index];
+                                       count++;
+                                   }
+                               }
+                               var o = jlinq.from(objects).equals("jsondocId", this.id).first();
                                var object = Handlebars.compile($("#object").html());
                                var objectHTML = object(o);
                                $("#content").html(objectHTML);

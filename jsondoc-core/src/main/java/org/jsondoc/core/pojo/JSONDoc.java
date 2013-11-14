@@ -1,10 +1,14 @@
 package org.jsondoc.core.pojo;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.jsondoc.core.visitor.Visitable;
 import org.jsondoc.core.visitor.Visitor;
+
+import com.google.common.collect.Maps;
 
 public final class JSONDoc implements Visitable {
 
@@ -12,7 +16,7 @@ public final class JSONDoc implements Visitable {
 	private String basePath;
 
     private List<ApiDoc> apis = new ArrayList<ApiDoc>();
-	private List<ApiObjectDoc> objects = new ArrayList<ApiObjectDoc>();
+	private Map<String,Collection<ApiObjectDoc>> objects = Maps.newHashMap();
 
 	public JSONDoc(String version, String basePath) {
 		this.version = version;
@@ -35,11 +39,11 @@ public final class JSONDoc implements Visitable {
 		this.apis = apis;
 	}
 
-	public List<ApiObjectDoc> getObjects() {
+	public Map<String,Collection<ApiObjectDoc>> getObjects() {
 		return objects;
 	}
 
-	public void setObjects(List<ApiObjectDoc> objects) {
+	public void setObjects(Map<String,Collection<ApiObjectDoc>> objects) {
 		this.objects = objects;
 	}
 

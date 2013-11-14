@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectProperty;
 
-@ApiObject(name = "user")
+@ApiObject(name = "user",category = "entity")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User {
