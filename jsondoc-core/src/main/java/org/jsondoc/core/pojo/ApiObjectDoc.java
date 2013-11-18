@@ -12,9 +12,31 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
 
     private final String jsondocId = UUID.randomUUID().toString();
 
+    /**
+     * The name of the object, used to represent it within the UI.  This is
+     * a user friendly form.
+     */
     private String name;
+
+    /**
+     * A human readable description of the object.
+     */
     private String description;
+
+    /**
+     * Objects of the same category are grouped together in the UI.
+     */
     private String category;
+
+    /**
+     * An example of this object, such as a json representation of the instance for
+     * display to the user.
+     */
+    private String example;
+
+    /**
+     * The version this object is valid for.
+     */
     private ApiVersionDoc version;
 
     private List<ApiObjectPropertyDoc> fields = new ArrayList<ApiObjectPropertyDoc>();
@@ -84,5 +106,13 @@ public final class ApiObjectDoc implements Comparable<ApiObjectDoc>, Visitable {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getExample() {
+        return example;
+    }
+
+    public void setExample(String example) {
+        this.example = example;
     }
 }
