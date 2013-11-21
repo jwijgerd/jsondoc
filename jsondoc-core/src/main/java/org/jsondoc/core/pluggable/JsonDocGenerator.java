@@ -1,22 +1,17 @@
 package org.jsondoc.core.pluggable;
 
-import static com.google.common.collect.ImmutableListMultimap.Builder;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Multimaps.index;
 import static org.jsondoc.core.util.Parameter.parametersFrom;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiBodyObjectHandler;
 import org.jsondoc.core.pluggable.jsondoc.JsonDocApiErrorHandler;
@@ -34,10 +29,7 @@ import org.jsondoc.core.pojo.ApiObjectDoc;
 import org.jsondoc.core.pojo.ApiParamDoc;
 import org.jsondoc.core.pojo.JSONDoc;
 import org.jsondoc.core.util.Parameter;
-import org.jsondoc.core.visitor.SortAlphabeticallyVisitor;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
 /**
@@ -45,18 +37,6 @@ import com.google.common.collect.Lists;
  */
 public class JsonDocGenerator {
 
-    public static final Function<ApiObjectDoc,String> KEY_FUNCTION = new Function<ApiObjectDoc,String>() {
-        @Override
-        public String apply(ApiObjectDoc apiObjectDoc) {
-               return apiObjectDoc.getCategory();
-        }
-    };
-    public static final Predicate<ApiObjectDoc> API_OBJECT_DOC_PREDICATE = new Predicate<ApiObjectDoc>() {
-        @Override
-        public boolean apply(@Nullable ApiObjectDoc input) {
-            return input != null && input.getCategory() != null;
-        }
-    };
     private final List<ApiAnnotationHandler> apiHandlers = newLinkedList();
     private final List<ApiMethodAnnotationHandler> apiMethodHandlers = newLinkedList();
     private final List<ApiObjectAnnotationHandler> apiObjectHandlers = newLinkedList();
@@ -165,27 +145,28 @@ public class JsonDocGenerator {
         return apiDoc;
     }
 
-    public Map<String,Collection<ApiObjectDoc>> createObjectDocs(Class<?> clazz, Class<?>... otherClasses) {
+    public Map<String,List<ApiObjectDoc>> createObjectDocs(Class<?> clazz, Class<?>... otherClasses) {
         return createObjectDocs(Lists.asList(clazz, otherClasses));
     }
 
-    public Map<String,Collection<ApiObjectDoc>> createObjectDocs(Iterable<Class<?>> classes) {
-        return new Builder<String,ApiObjectDoc>()
-                 .putAll(index(filter(transform(classes, getCreateObjectDocFunction()),API_OBJECT_DOC_PREDICATE),
-                         KEY_FUNCTION))
-                 .orderValuesBy(SortAlphabeticallyVisitor.OBJECT_COMPARATOR)
-                 .orderKeysBy(SortAlphabeticallyVisitor.COLLATOR)
-                 .build().asMap();
-    }
+    public Map<String,List<ApiObjectDoc>> createObjectDocs(Iterable<Class<?>> classes) {
 
-    private Function<Class<?>,ApiObjectDoc> getCreateObjectDocFunction() {
-        return new Function<Class<?>,ApiObjectDoc>() {
-            @Override
-            public ApiObjectDoc apply(Class<?> aClass) {
-                ApiObjectDoc objectDoc = createObjectDoc(aClass);
-                return objectDoc.isValid() ? objectDoc : null;
+        List<ApiObjectDoc> objects = new ArrayList<ApiObjectDoc>();
+        for (Class<?> clazz : classes) {
+            ApiObjectDoc object = createObjectDoc(clazz);
+            if (object.isValid()) {
+                objects.add(object);
             }
-        };
+        }
+
+        Map<String, List<ApiObjectDoc>> results = new HashMap<String,List<ApiObjectDoc>>();
+        for (ApiObjectDoc object : objects) {
+            if (!results.containsKey(object.getCategory())) {
+                results.put(object.getCategory(), new ArrayList<ApiObjectDoc>());
+            }
+            results.get(object.getCategory()).add(object);
+        }
+        return results;
     }
 
     public ApiObjectDoc createObjectDoc(Class<?> clazz) {

@@ -16,7 +16,7 @@ public final class JSONDoc implements Visitable {
 	private String basePath;
 
     private List<ApiDoc> apis = new ArrayList<ApiDoc>();
-	private Map<String,Collection<ApiObjectDoc>> objects = Maps.newHashMap();
+	private Map<String,List<ApiObjectDoc>> objects = Maps.newHashMap();
 
 	public JSONDoc(String version, String basePath) {
 		this.version = version;
@@ -39,11 +39,11 @@ public final class JSONDoc implements Visitable {
 		this.apis = apis;
 	}
 
-	public Map<String,Collection<ApiObjectDoc>> getObjects() {
+	public Map<String,List<ApiObjectDoc>> getObjects() {
 		return objects;
 	}
 
-	public void setObjects(Map<String,Collection<ApiObjectDoc>> objects) {
+	public void setObjects(Map<String,List<ApiObjectDoc>> objects) {
 		this.objects = objects;
 	}
 

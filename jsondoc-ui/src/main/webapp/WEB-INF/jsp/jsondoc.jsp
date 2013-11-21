@@ -111,8 +111,8 @@
 
         <div class="span3">
             <div id="maindiv" style="display:none;"></div>
-            <div class="well sidebar-nav" id="apidiv" style="display:none;"></div>
-            <div class="well sidebar-nav" id="objectdiv" style="display:none;"></div>
+            <div class="sidebar-nav" id="apidiv" style="display:none;"></div>
+            <div class="sidebar-nav" id="objectdiv" style="display:none;"></div>
         </div>
 
         <div class="span5">
