@@ -23,7 +23,7 @@ public final class ApiMethodDoc implements Visitable {
     private List<ApiHeaderDoc> headers = new ArrayList<ApiHeaderDoc>();
     private List<ApiParamDoc> pathparameters = new ArrayList<ApiParamDoc>();
     private List<ApiParamDoc> queryparameters = new ArrayList<ApiParamDoc>();
-    private List<ApiErrorDoc> apierrors = new ArrayList<ApiErrorDoc>();
+    private List<ApiErrorDoc> errors = new ArrayList<ApiErrorDoc>();
     private List<ApiPermissionDoc> permissions = new ArrayList<ApiPermissionDoc>();
 
     public String getJsondocId() {
@@ -128,6 +128,19 @@ public final class ApiMethodDoc implements Visitable {
         this.description = description;
     }
 
+    public void addParameter(ApiParamDoc param) {
+        switch (param.getParamType()) {
+            case PATH:
+                getPathparameters().add(param);
+                break;
+            case QUERY:
+                getQueryparameters().add(param);
+                break;
+            case UNDEFINED:
+                throw new IllegalArgumentException("undefined parameter type.");
+        }
+    }
+
     // Backward compatibility.
     public List<ApiParamDoc> getUrlparameters() {
         return getPathparameters();
@@ -178,25 +191,39 @@ public final class ApiMethodDoc implements Visitable {
         return bodyobject;
     }
 
-    public void setBodyobject(ApiBodyObjectDoc bodyobject) {
-        this.bodyobject = bodyobject;
+    public void setBodyobject(ApiBodyObjectDoc body) {
+        this.bodyobject = body;
     }
 
     public List<ApiErrorDoc> getApierrors() {
-        return apierrors;
+        return errors;
     }
 
-    public void setApierrors(List<ApiErrorDoc> apierrors) {
-        this.apierrors = apierrors;
+    public void setApierrors(List<ApiErrorDoc> errors) {
+        this.errors = errors;
     }
 
     public ApiErrorDoc getError(String code) {
-        for (ApiErrorDoc error : apierrors) {
+        for (ApiErrorDoc error : errors) {
             if (error.getCode().compareTo(code) == 0) {
                 return error;
             }
         }
         return null;
+    }
+
+    public ApiErrorDoc getError(String status, String code) {
+        for (ApiErrorDoc error : getApierrors()) {
+            if (matches(error, status, code)) {
+                return error;
+            }
+        }
+        return null;
+    }
+
+    private boolean matches(ApiErrorDoc error, String status, String code) {
+        return StringUtils.matches(error.getStatus(), status)
+                && StringUtils.matches(error.getCode(), code);
     }
 
     public void setVersion(ApiVersionDoc version) {

@@ -15,6 +15,16 @@ import com.google.common.collect.Iterables;
  */
 public class StringUtils {
 
+    public static boolean matches(String a, String b) {
+        if (!hasText(a)) {
+            return !hasText(b);
+        }
+        if (!hasText(b)) {
+            return false;
+        }
+        return a.compareTo(b) == 0;
+    }
+
     public static boolean hasText(String str) {
         return str != null && str.trim().length() > 0;
     }

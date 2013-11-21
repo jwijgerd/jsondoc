@@ -127,16 +127,7 @@ public class JsonDocGenerator {
                         ApiParamDoc apiParamDoc = new ApiParamDoc();
                         applyApiParamHandlers(parameter, apiParamDoc);
                         if (apiParamDoc.isValid()) {
-                            switch (apiParamDoc.getParamType()) {
-                                case PATH:
-                                    apiMethodDoc.getPathparameters().add(apiParamDoc);
-                                    break;
-                                case QUERY:
-                                    apiMethodDoc.getQueryparameters().add(apiParamDoc);
-                                    break;
-                                case UNDEFINED:
-                                    break;
-                            }
+                            apiMethodDoc.addParameter(apiParamDoc);
                         }
                     }
                 }
