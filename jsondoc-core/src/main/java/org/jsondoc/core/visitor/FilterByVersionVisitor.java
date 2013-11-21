@@ -1,7 +1,6 @@
 package org.jsondoc.core.visitor;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +37,8 @@ public class FilterByVersionVisitor extends AbstractDocVisitor<Void> {
             }
         }
 
-        Map<String,Collection<ApiObjectDoc>> objects = doc.getObjects();
-        for (Map.Entry<String,Collection<ApiObjectDoc>> collectionEntry : objects.entrySet()) {
+        Map<String,List<ApiObjectDoc>> objects = doc.getObjects();
+        for (Map.Entry<String,List<ApiObjectDoc>> collectionEntry : objects.entrySet()) {
             for (ApiObjectDoc object:collectionEntry.getValue()){
                 if (acceptVersion(object.getVersion(), version)) {
                     object.accept(this);

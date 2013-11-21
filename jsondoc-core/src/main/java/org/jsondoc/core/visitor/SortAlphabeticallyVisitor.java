@@ -4,6 +4,7 @@ import java.text.Collator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import org.jsondoc.core.pojo.ApiDoc;
@@ -33,7 +34,7 @@ public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
         for (ApiDoc api : doc.getApis()) {
             api.accept(this);
         }
-        for(Map.Entry<String,Collection<ApiObjectDoc>> entry: doc.getObjects().entrySet()) {
+        for(Map.Entry<String,List<ApiObjectDoc>> entry: doc.getObjects().entrySet()) {
             for (ApiObjectDoc object : entry.getValue()) {
                 object.accept(this);
             }
