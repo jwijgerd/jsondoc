@@ -1,12 +1,10 @@
 package org.jsondoc.core.pluggable;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
 import org.jsondoc.core.annotation.Api;
-import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.pojo.ApiDoc;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,25 +22,13 @@ public class ApiDocGenerationTest {
     }
 
     @Test
-    public void testMergeAPIsWithSameName() {
-        List<ApiDoc> docs = generator.createApiDocs(MergeApiA.class, MergeApiB.class);
-        assertThat(docs.size(), is(1));
-
-        ApiDoc doc = docs.get(0);
-        assertThat(doc.getMethods().size(), is(2));
+    public void testSampleAPI() {
+        ApiDoc apiDoc = generator.createApiDoc(SampleAPI.class);
+        assertThat(apiDoc, is(notNullValue()));
     }
 
-    @Api(name = "merge")
-    private static class MergeApiA {
-        @ApiMethod(path = "/a")
-        public void methodA() {
-        }
-    }
+    @Api
+    private static class SampleAPI {
 
-    @Api(name = "merge")
-    private static class MergeApiB {
-        @ApiMethod(path = "/b")
-        public void methodB() {
-        }
     }
 }

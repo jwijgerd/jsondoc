@@ -109,17 +109,7 @@ public class JsonDocGenerator {
             }
         }
 
-        // Merge API doc objects of the same name.
-        Map<String, ApiDoc> mergedDocs = newHashMap();
-        for (ApiDoc apiDoc : apiDocs) {
-            if (mergedDocs.containsKey(apiDoc.getName())) {
-                ApiDoc existingDoc = mergedDocs.get(apiDoc.getName());
-                existingDoc.getMethods().addAll(apiDoc.getMethods());
-            } else {
-                mergedDocs.put(apiDoc.getName(), apiDoc);
-            }
-        }
-        return newArrayList(mergedDocs.values());
+        return apiDocs;
     }
 
     public ApiDoc createApiDoc(Class<?> clazz) {
