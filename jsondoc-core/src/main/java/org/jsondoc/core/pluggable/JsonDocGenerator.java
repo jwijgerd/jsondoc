@@ -2,6 +2,7 @@ package org.jsondoc.core.pluggable;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
+import static com.google.common.collect.Maps.newHashMap;
 import static org.jsondoc.core.util.Parameter.parametersFrom;
 
 import java.lang.annotation.Annotation;
@@ -107,7 +108,18 @@ public class JsonDocGenerator {
                 apiDocs.add(apiDoc);
             }
         }
-        return apiDocs;
+
+        // Merge API doc objects of the same name.
+        Map<String, ApiDoc> mergedDocs = newHashMap();
+        for (ApiDoc apiDoc : apiDocs) {
+            if (mergedDocs.containsKey(apiDoc.getName())) {
+                ApiDoc existingDoc = mergedDocs.get(apiDoc.getName());
+                existingDoc.getMethods().addAll(apiDoc.getMethods());
+            } else {
+                mergedDocs.put(apiDoc.getName(), apiDoc);
+            }
+        }
+        return newArrayList(mergedDocs.values());
     }
 
     public ApiDoc createApiDoc(Class<?> clazz) {

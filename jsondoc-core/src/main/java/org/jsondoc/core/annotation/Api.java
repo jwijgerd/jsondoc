@@ -36,5 +36,9 @@ public @interface Api {
 	 */
 	String description() default "";
 
+    /**
+     * An indicator for the status of this API, for example, internal, released, proposed.
+     * @return
+     */
     ApiStatus status() default UNDEFINED;
 }
