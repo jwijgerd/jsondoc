@@ -2,6 +2,7 @@ package org.jsondoc.core.pluggable;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
+import static com.google.common.collect.Maps.newHashMap;
 import static org.jsondoc.core.util.Parameter.parametersFrom;
 
 import java.lang.annotation.Annotation;
@@ -107,6 +108,7 @@ public class JsonDocGenerator {
                 apiDocs.add(apiDoc);
             }
         }
+
         return apiDocs;
     }
 

@@ -51,6 +51,10 @@ public @interface ApiMethod {
 	 */
 	String[] consumes() default {};
 
+    /**
+     * An indicator for the status of this API, for example, internal, released, proposed.
+     * @return
+     */
     ApiStatus status() default ApiStatus.UNDEFINED;
 
 }
