@@ -154,10 +154,15 @@ public class JsonDocGenerator {
 
         Map<String, List<ApiObjectDoc>> results = new HashMap<String,List<ApiObjectDoc>>();
         for (ApiObjectDoc object : objects) {
-            if (!results.containsKey(object.getCategory())) {
-                results.put(object.getCategory(), new ArrayList<ApiObjectDoc>());
+            String category = object.getCategory();
+            if (category == null) {
+                category = "General";
+                object.setCategory(category);
             }
-            results.get(object.getCategory()).add(object);
+            if (!results.containsKey(category)) {
+                results.put(category, new ArrayList<ApiObjectDoc>());
+            }
+            results.get(category).add(object);
         }
         return results;
     }

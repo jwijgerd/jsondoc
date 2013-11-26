@@ -107,6 +107,15 @@ public class ApiObjectDocGenerationTest {
         assertThat(docB.getCategory(), is("b"));
     }
 
+    @Test
+    public void testAnnotatedCategoryInheritAndOverride() {
+        ApiObjectDoc override = generator.createObjectDoc(CategoryOverride.class);
+        assertThat(override.getCategory(), is("b"));
+
+        ApiObjectDoc inherit = generator.createObjectDoc(CategoryInherit.class);
+        assertThat(inherit.getCategory(), is("a"));
+    }
+
     private static class InheritBaseA {
         @ApiObjectProperty
         private String baseProperty;
@@ -116,6 +125,21 @@ public class ApiObjectDocGenerationTest {
     private static class InheritObjectA extends InheritBaseA {
         @ApiObjectProperty
         private String objectProperty;
+    }
+
+    @ApiObject(category = "a")
+    private static class InheritCategory {
+
+    }
+
+    @ApiObject(category = "b")
+    private static class CategoryOverride extends InheritCategory {
+
+    }
+
+    @ApiObject
+    private static class CategoryInherit extends InheritCategory {
+
     }
 
     @ApiObject
@@ -161,4 +185,6 @@ public class ApiObjectDocGenerationTest {
     @ApiObject(category = "b")
     private static class CategoryBObject {
     }
+
+
 }

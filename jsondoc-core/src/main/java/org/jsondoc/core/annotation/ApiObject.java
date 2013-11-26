@@ -43,5 +43,5 @@ public @interface ApiObject {
      *
      * @return
      */
-    String category() default "General";
+    String category() default "";
 }
