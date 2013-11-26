@@ -16,6 +16,7 @@ public final class ApiMethodDoc implements Visitable {
     private ApiVersionDoc version;
     private ApiVerb verb;
     private ApiStatus status;
+    private int responseStatus = 200;
     private ApiBodyObjectDoc bodyobject;
     private ApiResponseObjectDoc response;
     private List<String> produces = new ArrayList<String>();
@@ -241,5 +242,13 @@ public final class ApiMethodDoc implements Visitable {
 
     public boolean isValid() {
         return StringUtils.hasText(path);
+    }
+
+    public void setResponseStatus(int responseStatus) {
+        this.responseStatus = responseStatus;
+    }
+
+    public int getResponseStatus() {
+        return responseStatus;
     }
 }

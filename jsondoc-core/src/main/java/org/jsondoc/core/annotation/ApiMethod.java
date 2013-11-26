@@ -52,6 +52,12 @@ public @interface ApiMethod {
 	String[] consumes() default {};
 
     /**
+     * The http response status code of this API method when it is successful, defaults to 200 'OK'.
+     * @return
+     */
+    int responseStatus() default 200;
+
+    /**
      * An indicator for the status of this API, for example, internal, released, proposed.
      * @return
      */

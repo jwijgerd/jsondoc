@@ -201,6 +201,10 @@
                             <th>Method</th>
                             <td><span class="label {{verb}}">{{verb}}</span></td>
                         </tr>
+                        <tr>
+                            <th>Response Status</th>
+                            <td>{{responseStatus}}</td>
+                        </tr>
                         {{#if produces}}
                         <tr>
                             <th colspan=2>Produces</th>
@@ -363,7 +367,7 @@
                         </tr>
                         {{#each apierrors}}
                         <tr>
-                            <td><code>{{this.code}}</code></td>
+                            <td><code>{{this.status}}-{{this.code}}</code></td>
                             <td>{{this.description}}</td>
                         </tr>
                         {{/each}}

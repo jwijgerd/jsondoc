@@ -37,6 +37,7 @@ public class JsonDocApiMethodHandler implements ApiMethodAnnotationHandler {
         if (annotation.status() != ApiStatus.UNDEFINED) {
             doc.setStatus(annotation.status());
         }
+        doc.setResponseStatus(annotation.responseStatus());
         doc.addConsumes(annotation.consumes());
         doc.addProduces(annotation.produces());
     }
