@@ -172,6 +172,15 @@ public class JsonDocGenerator {
         // Process parents first as they give the most 'general' results.
         ApiObjectDoc apiObjectDoc = clazz.getSuperclass() != null ? createObjectDoc(clazz.getSuperclass()) : new ApiObjectDoc();
 
+        // handle interfaces.
+        for (Class<?> classInterface : clazz.getInterfaces()) {
+            applyApiObjectHandlers(classInterface, apiObjectDoc);
+
+            for (Method method : classInterface.getDeclaredMethods()) {
+                applyApiObjectHandlers(method, apiObjectDoc);
+            }
+        }
+
         // Process class level annotations.
         applyApiObjectHandlers(clazz, apiObjectDoc);
 

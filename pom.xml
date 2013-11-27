@@ -36,6 +36,7 @@
         <module>jsondoc-springmvc</module>
         <module>jsondoc-sample-springmvc</module>
         <module>jsondoc-ui</module>
+        <module>jsondoc-ebuddy</module>
     </modules>
 
     <distributionManagement>
