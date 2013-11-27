@@ -39,7 +39,8 @@ public class FilterByVersionVisitor extends AbstractDocVisitor<Void> {
 
         Map<String,List<ApiObjectDoc>> objects = doc.getObjects();
         for (Map.Entry<String,List<ApiObjectDoc>> collectionEntry : objects.entrySet()) {
-            for (ApiObjectDoc object:collectionEntry.getValue()){
+            List<ApiObjectDoc> list = new ArrayList<ApiObjectDoc>(collectionEntry.getValue());
+            for (ApiObjectDoc object: list){
                 if (acceptVersion(object.getVersion(), version)) {
                     object.accept(this);
                 } else {
