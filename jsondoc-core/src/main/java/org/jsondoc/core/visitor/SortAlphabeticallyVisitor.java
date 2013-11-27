@@ -1,7 +1,6 @@
 package org.jsondoc.core.visitor;
 
 import java.text.Collator;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -14,6 +13,9 @@ import org.jsondoc.core.pojo.ApiObjectPropertyDoc;
 import org.jsondoc.core.pojo.JSONDoc;
 
 /**
+ * An implementation of the {@link Visitor} interface that alphabetically sorts the
+ * contents of the documentation.
+ *
  * @author Daniel Ostermeier
  */
 public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
@@ -34,7 +36,9 @@ public class SortAlphabeticallyVisitor extends AbstractDocVisitor<Void> {
         for (ApiDoc api : doc.getApis()) {
             api.accept(this);
         }
+
         for(Map.Entry<String,List<ApiObjectDoc>> entry: doc.getObjects().entrySet()) {
+            Collections.sort(entry.getValue(), OBJECT_COMPARATOR);
             for (ApiObjectDoc object : entry.getValue()) {
                 object.accept(this);
             }
