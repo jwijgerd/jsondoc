@@ -20,11 +20,11 @@ import java.lang.annotation.Target;
 public @interface EbuddyApiObjectOptions {
 
     /**
-     * When true, the locallyDefined property is used to filter out all
-     * properties from an api object that are not explicitly defined on
+     * When true, the useDeclaredOnly property is used to filter out all
+     * properties from an api object that are not explicitly declared on
      * the object where this annotation is defined. Defaults to false.
      *
      * @return true to filter the properties, false otherwise.
      */
-    boolean locallyDefined() default false;
+    boolean useDeclaredOnly() default false;
 }

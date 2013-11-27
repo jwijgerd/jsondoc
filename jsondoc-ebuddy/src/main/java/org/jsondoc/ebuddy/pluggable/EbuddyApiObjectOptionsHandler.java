@@ -30,18 +30,18 @@ public class EbuddyApiObjectOptionsHandler implements ApiObjectAnnotationHandler
     public void handle(AnnotatedElement element, ApiObjectDoc doc) {
         Class<?> clazz = (Class<?>)element;
         EbuddyApiObjectOptions options = element.getAnnotation(EbuddyApiObjectOptions.class);
-        if (options.locallyDefined()) {
-            handleLocallyDefined(clazz, doc);
+        if (options.useDeclaredOnly()) {
+            handleUseDeclaredOnly(clazz, doc);
         }
     }
 
     /**
-     * Handle the processing of {@link EbuddyApiObjectOptions#locallyDefined()} being true.
+     * Handle the processing of {@link EbuddyApiObjectOptions#useDeclaredOnly()} being true.
      *
      * @param clazz the class that defines the set of properties to be retained.
      * @param doc   the documentation model to be updated.
      */
-    private void handleLocallyDefined(Class<?> clazz, ApiObjectDoc doc) {
+    private void handleUseDeclaredOnly(Class<?> clazz, ApiObjectDoc doc) {
 
         Collection<String> namesToRetain = new HashSet<String>();
 

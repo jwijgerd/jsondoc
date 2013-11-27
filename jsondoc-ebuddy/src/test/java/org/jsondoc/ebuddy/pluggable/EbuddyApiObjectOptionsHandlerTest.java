@@ -62,7 +62,7 @@ public class EbuddyApiObjectOptionsHandlerTest {
     }
 
     @ApiObject(name = "create group adapter")
-    @EbuddyApiObjectOptions(locallyDefined = true)
+    @EbuddyApiObjectOptions(useDeclaredOnly = true)
     private static class CreateGroupAdapter extends GroupBaseAdapter {
         @Override
         public String getName() {
