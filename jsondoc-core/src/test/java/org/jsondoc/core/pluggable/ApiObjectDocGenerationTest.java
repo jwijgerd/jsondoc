@@ -2,6 +2,7 @@ package org.jsondoc.core.pluggable;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.IsCollectionContaining.hasItems;
 
@@ -116,6 +117,16 @@ public class ApiObjectDocGenerationTest {
         assertThat(inherit.getCategory(), is("a"));
     }
 
+
+    @Test
+    public void testAnnotatedApiObjectsInheritedInterfaces() {
+        ApiObjectDoc apiObjectDoc = generator.createObjectDoc(InterfaceInheritOutputAdapter.class);
+        assertNotNull(apiObjectDoc.getField("valueB"));
+        assertNotNull(apiObjectDoc.getField("valueA"));
+        assertNotNull(apiObjectDoc.getField("valueC"));
+        assertNotNull(apiObjectDoc.getField("valueD"));
+    }
+
     private static class InheritBaseA {
         @ApiObjectProperty
         private String baseProperty;
@@ -185,6 +196,67 @@ public class ApiObjectDocGenerationTest {
     @ApiObject(category = "b")
     private static class CategoryBObject {
     }
+
+
+    @ApiObject(name = "Interface Inherit Output Adapter", category = "Z")
+    private  static class InterfaceInheritOutputAdapter extends InterfaceInheritBaseAdapter implements InterfaceStandAloneOneLevelUp {
+        public String getValueB() {
+            return "valueB";
+        }
+        @Override
+        public String getValueA() {
+            return "valueA";
+        }
+        @Override
+        public String getValueC() {
+            return "valueC";
+        }
+        @Override
+        public String getValueD() {
+            return "valueD";
+        }
+    }
+
+
+    private  static class InterfaceInheritBaseAdapter implements InterfaceInheritChild, InterfaceStandAlone{
+        @Override
+        public String getValueB() {
+            return null;
+        }
+        @Override
+        public String getValueA() {
+            return null;
+        }
+        @Override
+        public String getValueC() {
+            return null;
+        }
+    }
+
+    @ApiObject(name = "InterfaceInheritChild")
+    private  static interface InterfaceInheritChild extends InterfaceInheritParent {
+        @ApiObjectProperty(description = "value b")
+        String getValueB();
+    }
+
+    @ApiObject(name = "InterfaceStandAloneOneLevelUp")
+    private  static interface InterfaceStandAloneOneLevelUp {
+        @ApiObjectProperty(description = "value d")
+        String getValueD();
+    }
+
+    @ApiObject(name = "InterfaceStandAlone")
+    private  static interface InterfaceStandAlone {
+        @ApiObjectProperty(description = "value c")
+        String getValueC();
+    }
+    @ApiObject(name = "InterfaceInheritParent")
+    private  static interface InterfaceInheritParent{
+        @ApiObjectProperty(description = "value a")
+        String getValueA();
+
+    }
+
 
 
 }

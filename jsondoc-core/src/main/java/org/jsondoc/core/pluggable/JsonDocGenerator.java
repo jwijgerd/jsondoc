@@ -2,7 +2,6 @@ package org.jsondoc.core.pluggable;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Maps.newHashMap;
 import static org.jsondoc.core.util.Parameter.parametersFrom;
 
 import java.lang.annotation.Annotation;
@@ -172,15 +171,8 @@ public class JsonDocGenerator {
         // Process parents first as they give the most 'general' results.
         ApiObjectDoc apiObjectDoc = clazz.getSuperclass() != null ? createObjectDoc(clazz.getSuperclass()) : new ApiObjectDoc();
 
-        // handle interfaces.
-        for (Class<?> classInterface : clazz.getInterfaces()) {
-            applyApiObjectHandlers(classInterface, apiObjectDoc);
-
-            for (Method method : classInterface.getDeclaredMethods()) {
-                applyApiObjectHandlers(method, apiObjectDoc);
-            }
-        }
-
+        //handle interfaces
+        applyAnnotationsFromInterfaces(apiObjectDoc, clazz);
         // Process class level annotations.
         applyApiObjectHandlers(clazz, apiObjectDoc);
 
@@ -192,6 +184,17 @@ public class JsonDocGenerator {
         }
 
         return apiObjectDoc;
+    }
+
+    private void applyAnnotationsFromInterfaces(ApiObjectDoc apiObjectDoc, Class<?> clazz) {
+        for(Class<?> classInterface : clazz.getInterfaces()) {
+            applyAnnotationsFromInterfaces(apiObjectDoc, classInterface);
+        }
+        applyApiObjectHandlers(clazz, apiObjectDoc);
+
+        for (Method method : clazz.getDeclaredMethods()) {
+            applyApiObjectHandlers(method, apiObjectDoc);
+        }
     }
 
     private void applyApiHandlers(AnnotatedElement element, ApiDoc apiDoc) {
